@@ -1,0 +1,69 @@
+main {
+}
+
+input{
+	width:calc(100% - 200px);
+	font-size:16px;
+	padding:10px;
+}
+
+.search{
+	width:150px;
+}
+
+
+/* Search List */
+
+
+/* Search Result */
+.searchResult{
+	width:100%;
+	text-align: left;
+	vertical-align: middle;
+	/* display:flex; */
+	/* justify-content:space-between;  */
+}
+
+.searchResult img{
+	border-radius:100%;
+	width:40px;
+	height:40px;
+}
+
+.searchResult p{
+
+}
+
+.searchResultRow:hover{
+	background-color:rgba(0,0,0,0.05)
+}
+
+.trackName{
+	font-size:20px;
+}
+
+.trackTitleContainer{
+	/* float:left; */
+	text-align: left;
+	display:flex;
+}
+
+.trackTitleContainer th{
+	font-weight:100;
+}
+
+.trackTitleContainer *{
+	align-self: center;
+}
+
+.trackTitleContainer div{
+	display:flex;
+	flex-direction: column;
+	text-align: left;
+	margin-left:15px;
+}
+
+.trackTitleContainer p{
+	margin:0 0 5px 5px;
+	align-self: flex-start;
+}
