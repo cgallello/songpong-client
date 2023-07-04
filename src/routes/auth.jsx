@@ -55,7 +55,7 @@ export default function Auth() {
 		if (data.product != "premium") {
 			alert("Soooorry you have to have Spotify Premium for this");
 		}
-		// window.location = '/edit';
+		window.location = '/edit';
 	}
 
 	async function postUser(data) {

@@ -35,7 +35,7 @@ input{
 }
 
 .searchResultRow:hover{
-	background-color:rgba(0,0,0,0.05)
+	background-color:rgba(0,0,0,0.05);
 }
 
 .trackName{
@@ -66,4 +66,9 @@ input{
 .trackTitleContainer p{
 	margin:0 0 5px 5px;
 	align-self: flex-start;
+}
+
+.playable:hover{
+	background-color:rgba(0,0,0,0.05);
+	cursor:pointer;
 }

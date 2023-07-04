@@ -1,8 +1,17 @@
 import React from 'react';
 import SearchResult from './searchresult.jsx';
 
-function SearchList({ searchResults, playlistId }) {
-	const searchResult = searchResults.map(track => <SearchResult key={track.uri} track={track} playlistId={playlistId} />);
+function SearchList({ searchResults, playlistId, currentSong, setCurrentSong }) {
+
+	const searchResult = searchResults.map((track, index) => <SearchResult 
+		key={index} 
+		index={index} 
+		track={track} 
+		playlistId={playlistId} 
+		currentSong={currentSong}
+		setCurrentSong={setCurrentSong} 
+		/>);
+
 	return (
 		<table className="searchResult">
 			<thead>
