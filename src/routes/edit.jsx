@@ -27,7 +27,6 @@ export default function Edit() {
 	
 	async function createPlaylist() {
 		setPlaylistCreated(true);
-		console.log("creating playlist");
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		const response = fetch(endpointURL, {
 			method: 'POST',

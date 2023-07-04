@@ -40,8 +40,9 @@ function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
 	}
 
 	return (
-		<tr className="searchResultRow" onClick={() => playSong(track.preview_url)}>
-			<td className={"trackTitleContainer" + (track.preview_url ? " playable" : "")}>
+		<tr className="searchResultRow">
+			<td className={"trackTitleContainer" + (track.preview_url ? " playable" : "")}
+				onClick={() => playSong(track.preview_url)}>
 				<div><img className="" src={track.albumArtwork} /></div>
 				<div>
 					<p className="trackName">{isCurrentSong ? '🎵' : '' }{track.name}</p>
