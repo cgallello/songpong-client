@@ -1,4 +1,6 @@
-main {
+html, body, #root, main{
+	margin:0px;
+	height:100%;
 }
 
 input{
@@ -28,10 +30,6 @@ input{
 	border-radius:100%;
 	width:40px;
 	height:40px;
-}
-
-.searchResult p{
-
 }
 
 .searchResultRow:hover{
@@ -71,4 +69,34 @@ input{
 .playable:hover{
 	background-color:rgba(0,0,0,0.05);
 	cursor:pointer;
+}
+
+/* Web Playback */
+
+.playbackContainer{
+	position:sticky;
+	top:100vh;
+	display:flex;
+	flex-wrap:no-wrap;
+	border-top:1px solid rgba(0,0,0,0.5);
+	padding:10px;
+}
+
+.now-playing__cover{
+	width:40px;
+	height:40px;
+	border-radius:100%;
+}
+
+.now-playing__track-info{
+	flex-grow:1;
+	padding-left:10px;
+}
+
+.now-playing__controls{
+	
+}
+
+.hidden{
+	visibility:hidden;
 }

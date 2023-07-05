@@ -32,7 +32,7 @@ export default function Login() {
 
 		generateCodeChallenge(codeVerifier).then(codeChallenge => {
 			let state = generateRandomString(16);
-			let scope = 'user-read-private user-read-email playlist-modify-public';
+			let scope = 'user-read-private user-read-email playlist-modify-public streaming';
 
 			localStorage.setItem('code_verifier', codeVerifier);
 

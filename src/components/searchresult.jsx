@@ -4,10 +4,6 @@ function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
 
 	const isCurrentSong = track.preview_url && currentSong === track.preview_url;
 
-	function playSong(preview_url){
-		setCurrentSong(preview_url);
-	}
-
 	async function addToPlaylist(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 		const response = fetch(endpointURL, {
@@ -42,7 +38,7 @@ function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
 	return (
 		<tr className="searchResultRow">
 			<td className={"trackTitleContainer" + (track.preview_url ? " playable" : "")}
-				onClick={() => playSong(track.preview_url)}>
+				onClick={() => setCurrentSong(track)}>
 				<div><img className="" src={track.albumArtwork} /></div>
 				<div>
 					<p className="trackName">{isCurrentSong ? '🎵' : '' }{track.name}</p>

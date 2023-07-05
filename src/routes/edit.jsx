@@ -1,6 +1,6 @@
-import { clientId, redirectUri } from '../config';
 import React, { useState } from 'react';
 import SearchList from '../components/searchlist';
+import WebPlayback from '../components/webplayback'
 
 export default function Edit() {
 
@@ -10,16 +10,6 @@ export default function Edit() {
 	const [playlistCreated, setPlaylistCreated] = useState(false);
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
-
-	const setCurrentSong = (preview_url) => {
-		currentAudio && currentAudio.pause();
-		setCurrentSongState(preview_url);
-		if(preview_url){
-			let audio = new Audio(preview_url)
-			audio.play();
-			setCurrentAudio(audio);
-		}
-	};
 
 	if(!playlistCreated){
 		createPlaylist();
@@ -54,7 +44,6 @@ export default function Edit() {
 			});
 	}
 
-	
 	async function handleSearch(e){
 		currentAudio && currentAudio.pause();
 
@@ -92,6 +81,19 @@ export default function Edit() {
 				console.error('Error:', error);
 			});		
 	}
+	
+	async function setSong(track){
+		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
+		const response = await fetch(endpointURL, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('access_token')
+			},
+			body: JSON.stringify({
+				uris:[track.uri]
+			})
+		});
+	}
 
 	function msToHMS(ms) {
 	    let seconds = ms / 1000;
@@ -110,22 +112,40 @@ export default function Edit() {
     	setInputValue(event.target.value);
   	}	
 	
+	const setCurrentSong = (track) => {
+		let spotifyProduct = localStorage.getItem('spotifyProduct');
+		currentAudio && currentAudio.pause();
+		setCurrentSongState(track);
+		if(spotifyProduct == "free"){
+			if(track.preview_url){
+				let audio = new Audio(track.preview_url)
+				audio.play();
+				setCurrentAudio(audio);
+			}
+		} else if (spotifyProduct == "premium"){
+			setSong(track);
+		}
+	};
+
 	return (
 		<main>
-			<form>
-				<input 
-					  type="text" 
-					  placeholder="search" 
-					  autoFocus
-					  id="searchQuery"
-					  value={inputValue}
-					  onChange={handleChange}
-					  />
-				<input type="button" className="search" value="Search" onClick={handleSearch}></input>
-			</form>
-			<div style={{overflowY: 'scroll', height:'calc(100% - 40px)'}}>
-		        <SearchList searchResults={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
-		  	</div>
+			<div className="editWrapper">
+				<form>
+					<input 
+						type="text" 
+						placeholder="search" 
+						autoFocus
+						id="searchQuery"
+						value={inputValue}
+						onChange={handleChange}
+						/>
+					<input type="button" className="search" value="Search" onClick={handleSearch}></input>
+				</form>
+				<div style={{overflowY: 'scroll', height:'calc(100% - 40px)'}}>
+					<SearchList searchResults={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+				</div>
+			</div>
+			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />
 		</main>
 	);
 }

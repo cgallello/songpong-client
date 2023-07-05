@@ -42,19 +42,11 @@ export default function Auth() {
 		});
 
 		const data = await response.json();
-		const spotifyDisplayName = data.display_name;
-		const spotifyEmail = data.email;
 		const spotifyId = data.id;
-		const spotifyAvatarUrl = data.images.url;
-		const spotifyAvatarWidth = data.images.width;
-		const spotifyAvatarHeight = data.images.height;
 		localStorage.setItem('spotifyId', spotifyId);
+		localStorage.setItem('spotifyProduct', data.product);
 
 		postUser(data);
-
-		if (data.product != "premium") {
-			alert("Soooorry you have to have Spotify Premium for this");
-		}
 		window.location = '/edit';
 	}
 
