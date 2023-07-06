@@ -29,6 +29,7 @@ export default function Playlist() {
 		})
 			.then(response => {
 				if (!response.ok) {
+					if(response.status == 401){ window.location = '/'; }
 					throw new Error('HTTP status ' + response.status + response.message);
 				}
 				return response.json();
@@ -60,7 +61,6 @@ export default function Playlist() {
 	}
 	
 	async function setSong(track){
-		console.log(playlistData.uri);
 		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
 		const response = await fetch(endpointURL, {
 			method: 'PUT',
@@ -81,9 +81,9 @@ export default function Playlist() {
 	}
 	
 	const setCurrentSong = (track) => {
-		let spotifyProduct = localStorage.getItem('spotifyProduct');
-		currentAudio && currentAudio.pause();
 		setCurrentSongState(track);
+		currentAudio && currentAudio.pause();
+		let spotifyProduct = localStorage.getItem('spotifyProduct');
 		if(spotifyProduct == "free"){
 			if(track.preview_url){
 				let audio = new Audio(track.preview_url)
@@ -98,6 +98,7 @@ export default function Playlist() {
 	return (
 		<main>
 			<div className="editWrapper">
+				<div><a href="/search">Add to playlist</a></div>
 				<div style={{overflowY: 'scroll', height:'calc(100% - 40px)'}}>
 					<TrackList tracks={playlistTrackData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 				</div>

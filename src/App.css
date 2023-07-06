@@ -1,6 +1,7 @@
 html, body, #root, main{
 	margin:0px;
 	height:100%;
+	overflow:scroll;
 }
 
 input{
@@ -74,12 +75,15 @@ input{
 /* Web Playback */
 
 .playbackContainer{
-	position:sticky;
-	top:100vh;
+	position:absolute;
+	bottom:0px;
 	display:flex;
 	flex-wrap:no-wrap;
 	border-top:1px solid rgba(0,0,0,0.5);
 	padding:10px;
+	background-color:white;
+	max-height:50px;
+	width:100%;
 }
 
 .now-playing__cover{

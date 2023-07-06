@@ -2,7 +2,7 @@ import React from 'react';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
-	const isCurrentSong = track.preview_url && currentSong === track.preview_url;
+	const isCurrentSong = (track.preview_url && currentSong === track.preview_url) || (track === currentSong);
 
 	async function addToPlaylistAPI(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
@@ -18,6 +18,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 		})
 			.then(response => {
 				if (!response.ok) {
+					if(response.status == 401){ window.location = '/'; }
 					throw new Error('HTTP status ' + response.status + response.message);
 				}
 				return response.json();

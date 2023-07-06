@@ -4,9 +4,10 @@ import {
 	createBrowserRouter,
 	RouterProvider
 } from "react-router-dom"
+import Home from "./routes/home"
 import Login from "./routes/login"
 import Auth from "./routes/auth"
-import Edit from "./routes/edit"
+import Search from "./routes/search"
 import Playlist from "./routes/playlist"
 import "./App.css"
 
@@ -20,8 +21,12 @@ const router = createBrowserRouter([
 		element: <Auth />,
 	},
 	{
-		path: "/edit",
-		element: <Edit />,
+		path: "/search",
+		element: <Search />,
+	},
+	{
+		path: "/home",
+		element: <Home />,
 	},
 	{
 	  path: '/playlist/:playlistUrlId',

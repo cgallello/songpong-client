@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TrackList from '../components/tracklist';
 import WebPlayback from '../components/webplayback'
 
-export default function Edit() {
+export default function Search() {
 
 	const [inputValue, setInputValue] = useState('');
 	const [searchResultsData, setSearchResultsData] = useState([]);
@@ -12,7 +12,7 @@ export default function Edit() {
 	const [currentAudio, setCurrentAudio] = useState(null);
 
 	if(!playlistCreated){
-		createPlaylistAPI();
+		// createPlaylistAPI();
 	}
 	
 	async function createPlaylistAPI() {
@@ -31,6 +31,7 @@ export default function Edit() {
 		})
 			.then(response => {
 				if (!response.ok) {
+					if(response.status == 401){ window.location = '/'; }
 					throw new Error('HTTP status ' + response.status + response.message);
 				}
 				return response.json();
@@ -58,6 +59,7 @@ export default function Edit() {
 		})
 		.then(response => {
 				if (!response.ok) {
+					if(response.status == 401){ window.location = '/'; }
 					throw new Error('HTTP status ' + response.status + response.message);
 				}
 				return response.json();

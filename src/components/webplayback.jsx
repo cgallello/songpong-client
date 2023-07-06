@@ -53,6 +53,9 @@ function WebPlayback({access_token, currentSong}) {
                         setPaused(state.paused);
                     }
                 });
+                // setCurrentSong(state.track_window.current_track, 'previous_next');
+
+                // TODO: If next/previous song clicked, update currentSong.
             }));
             player.connect();
         };
