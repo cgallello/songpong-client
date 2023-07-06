@@ -17,8 +17,8 @@ input{
 /* Search List */
 
 
-/* Search Result */
-.searchResult{
+/* Track List */
+.trackList{
 	width:100%;
 	text-align: left;
 	vertical-align: middle;
@@ -26,13 +26,13 @@ input{
 	/* justify-content:space-between;  */
 }
 
-.searchResult img{
+.trackList img{
 	border-radius:100%;
 	width:40px;
 	height:40px;
 }
 
-.searchResultRow:hover{
+.trackRow:hover{
 	background-color:rgba(0,0,0,0.05);
 }
 

@@ -67,17 +67,17 @@ function WebPlayback({access_token, currentSong}) {
                     <div className="now-playing__artist">{current_track.artists[0].name}</div>
                 </div>
                 <div className="now-playing__controls">
-                    {/* <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
+                    <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
                         &lt;&lt;
-                    </button> */}
+                    </button>
 
                     <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
                         { is_paused ? "PLAY" : "PAUSE" }
                     </button>
 
-                    {/* <button className="btn-spotify" onClick={() => { player.nextTrack(); }} >
+                    <button className="btn-spotify" onClick={() => { player.nextTrack(); }} >
                         &gt;&gt;
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </>

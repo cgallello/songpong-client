@@ -1,10 +1,10 @@
 import React from 'react';
 
-function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
+function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
 	const isCurrentSong = track.preview_url && currentSong === track.preview_url;
 
-	async function addToPlaylist(trackUri, playlistId) {
+	async function addToPlaylistAPI(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 		const response = fetch(endpointURL, {
 			method: 'POST',
@@ -29,14 +29,21 @@ function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
 			});
 	}
 
-	const playable = (preview_url) => {
-		if(preview_url){
-			return(playable);
+	function msToHMS(ms) {
+	    let seconds = ms / 1000;
+	    const hours = parseInt( seconds / 3600 ); // 3,600 seconds in 1 hour
+	    seconds = seconds % 3600; // seconds remaining after extracting hours
+	    const minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
+	    seconds = seconds % 60;
+		if(hours>0){
+			return hours+":"+minutes+":"+Math.round(seconds);
+		} else {
+			return minutes+":"+Math.round(seconds);
 		}
 	}
 
 	return (
-		<tr className="searchResultRow">
+		<tr className="trackRow">
 			<td className={"trackTitleContainer" + (track.preview_url ? " playable" : "")}
 				onClick={() => setCurrentSong(track)}>
 				<div><img className="" src={track.albumArtwork} /></div>
@@ -45,13 +52,13 @@ function SearchResult({index, track, playlistId, currentSong, setCurrentSong}) {
 					<p>{track.artistName}</p>
 				</div>
 			</td>
-			<td><p>{track.duration}</p></td>
+			<td><p>{msToHMS(track.duration)}</p></td>
 			<td><p>{track.albumName}</p></td>
 			<td>
-				<button onClick={() => addToPlaylist(track.uri, playlistId)}>Add</button>
+				<button onClick={() => addToPlaylistAPI(track.uri, playlistId)}>Add</button>
 			</td>
 		</tr>
 	);
 }
 
-export default SearchResult;
+export default Track;

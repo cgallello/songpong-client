@@ -1,9 +1,9 @@
 import React from 'react';
-import SearchResult from './searchresult.jsx';
+import Track from './track.jsx';
 
-function SearchList({ searchResults, playlistId, currentSong, setCurrentSong }) {
+function TrackList({ tracks, playlistId, currentSong, setCurrentSong }) {
 
-	const searchResult = searchResults.map((track, index) => <SearchResult 
+	const track = tracks.map((track, index) => <Track 
 		key={index} 
 		index={index} 
 		track={track} 
@@ -13,19 +13,19 @@ function SearchList({ searchResults, playlistId, currentSong, setCurrentSong }) 
 		/>);
 
 	return (
-		<table className="searchResult">
+		<table className="trackList">
 			<thead>
-				<tr>
+				{/* <tr>
 					<th></th>
 					<th>Duration</th>
 					<th>Album</th>
-				</tr>
+				</tr> */}
 			</thead>
 			<tbody>
-				{searchResult}
+				{track}
 			</tbody>
 		</table>
 	);
 }
 
-export default SearchList;
+export default TrackList;
