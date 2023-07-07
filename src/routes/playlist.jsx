@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
+import axiosInstance from '../components/HTTPintercept';
 
 export default function Playlist() {
 
@@ -13,85 +14,62 @@ export default function Playlist() {
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
 
+	const location = useLocation();
+	
 	useEffect(() => {
-		getPlaylist();
-	}, []);
+		getPlaylistAPI();
+	}, [location]);
 
-	async function getPlaylist() {
+	async function getPlaylistAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId;
 		let tmpResultsArray = [];
-		const response = fetch(endpointURL, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + localStorage.getItem('access_token')
-			}
-		})
-			.then(response => {
-				if (!response.ok) {
-					if(response.status == 401){ window.location = '/'; }
-					throw new Error('HTTP status ' + response.status + response.message);
-				}
-				return response.json();
-			})
-			.then(data => {
-                document.title = data.name + ' – Song Pong';
-				setPlaylistData({
-					id: data.id,
-					image: data.images[0].url,
-					name: data.name,
-					uri: data.uri
-				});
-				data.tracks.items.forEach((item, index) => {
-					tmpResultsArray.push({
-						name: item.track.name,
-						duration: item.track.duration_ms,
-						albumName: item.track.album.name,
-						albumArtwork: item.track.album.images[2].url,
-						artistName: item.track.artists[0].name,
-						uri: item.track.uri,
-						preview_url: item.track.preview_url
-					});
-					setPlaylistTrackData(tmpResultsArray);
-				});
-			})
-			.catch(error => {
-				console.error('Error:', error);
+		try {
+			const response = await axiosInstance.get(endpointURL);
+			document.title = response.data.name + ' – Song Pong';
+			localStorage.setItem("playlistId", response.data.id);
+			setPlaylistData({
+				id: response.data.id,
+				image: response.data.images[0].url,
+				name: response.data.name,
+				uri: response.data.uri
 			});
+			response.data.tracks.items.forEach((item, index) => {
+				tmpResultsArray.push({
+					name: item.track.name,
+					duration: item.track.duration_ms,
+					albumName: item.track.album.name,
+					albumArtwork: item.track.album.images[2].url,
+					artistName: item.track.artists[0].name,
+					uri: item.track.uri,
+					preview_url: item.track.preview_url
+				});
+				setPlaylistTrackData(tmpResultsArray);
+			});
+		} catch (error) { }
 	}
-	
-	async function setSong(track){
-		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
-		const response = await fetch(endpointURL, {
-			method: 'PUT',
-			headers: {
-				Authorization: 'Bearer ' + localStorage.getItem('access_token')
-			},
-			body: JSON.stringify({
-				uris:[track.uri]
-			}),
-			body: JSON.stringify({
-				'context_uri': playlistData.uri,
-				'offset':{
-					'uri':track.uri
-				}
-			})
-		});	
 
+	async function setSongAPI(track) {
+		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
+		try {
+			const response = await axiosInstance.put(endpointURL, {
+				'context_uri': playlistData.uri,
+				'offset': { 'uri': track.uri }
+			});
+		} catch (error) { }
 	}
-	
+
 	const setCurrentSong = (track) => {
 		setCurrentSongState(track);
 		currentAudio && currentAudio.pause();
 		let spotifyProduct = localStorage.getItem('spotifyProduct');
-		if(spotifyProduct == "free"){
-			if(track.preview_url){
+		if (spotifyProduct == "free") {
+			if (track.preview_url) {
 				let audio = new Audio(track.preview_url)
 				audio.play();
 				setCurrentAudio(audio);
 			}
-		} else if (spotifyProduct == "premium"){
-			setSong(track);
+		} else if (spotifyProduct == "premium") {
+			setSongAPI(track);
 		}
 	};
 
@@ -99,8 +77,8 @@ export default function Playlist() {
 		<main>
 			<div className="editWrapper">
 				<div><a href="/search">Add to playlist</a></div>
-				<div style={{overflowY: 'scroll', height:'calc(100% - 40px)'}}>
-					<TrackList tracks={playlistTrackData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+				<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+					<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 				</div>
 			</div>
 			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />

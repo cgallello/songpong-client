@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../components/HTTPintercept';
 
 export default function Home() {
     const [playlists, setPlaylists] = useState(null);
@@ -9,29 +10,11 @@ export default function Home() {
 
     async function getPlaylistsAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
-		const response = fetch(endpointURL, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + localStorage.getItem('access_token')
-			}
-		})
-			.then(response => {
-				if (!response.ok) {
-					if(response.status == 401){ window.location = '/'; }
-					throw new Error('HTTP status ' + response.status + response.message);
-				}
-				return response.json();
-			})
-			.then(data => {
-				setPlaylists(data);
-			})
-			.catch(error => {
-				console.error('Error:', error);
-			});
+		try {
+			const response = await axiosInstance.get(endpointURL);
+			setPlaylists(response.data);
+		} catch (error) { }
 	}
-
-
 
 	return (
 		<main>

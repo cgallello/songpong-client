@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axiosInstance from '../components/HTTPintercept';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
@@ -6,28 +7,11 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
 	async function addToPlaylistAPI(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
-		const response = fetch(endpointURL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + localStorage.getItem('access_token')
-			},
-			body: JSON.stringify({
+		try {
+			const response = await axiosInstance.post(endpointURL,{
 				'uris': [trackUri]
-			})
-		})
-			.then(response => {
-				if (!response.ok) {
-					if(response.status == 401){ window.location = '/'; }
-					throw new Error('HTTP status ' + response.status + response.message);
-				}
-				return response.json();
-			})
-			.then(data => {
-			})
-			.catch(error => {
-				console.error('Error:', error);
 			});
+		} catch (error) {}
 	}
 
 	function msToHMS(ms) {
@@ -47,7 +31,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 		<tr className="trackRow">
 			<td className={"trackTitleContainer" + (track.preview_url ? " playable" : "")}
 				onClick={() => setCurrentSong(track)}>
-				<div><img className="" src={track.albumArtwork} /></div>
+				<div><img src={track.albumArtwork} /></div>
 				<div>
 					<p className="trackName">{isCurrentSong ? '🎵' : '' }{track.name}</p>
 					<p>{track.artistName}</p>
@@ -55,9 +39,9 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 			</td>
 			<td><p>{msToHMS(track.duration)}</p></td>
 			<td><p>{track.albumName}</p></td>
-			<td>
+			{playlistId!==null ? (<td>
 				<button onClick={() => addToPlaylistAPI(track.uri, playlistId)}>Add</button>
-			</td>
+			</td>):(null)}
 		</tr>
 	);
 }

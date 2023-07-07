@@ -51,7 +51,6 @@ export default function Auth() {
 	}
 
 	async function postUser(data) {
-		console.log("postUser");
 
 		const endpointURL = 'http://localhost:8000/users';
 		const response = fetch(endpointURL, {
@@ -87,7 +86,6 @@ export default function Auth() {
 
 	return (
 		<main>
-			<h1>You are authorized!</h1>
 		</main>
 	);
 }
