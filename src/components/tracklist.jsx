@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Track from './track.jsx';
 
 function TrackList({ tracks, playlistId, currentSong, setCurrentSong }) {
@@ -15,11 +15,6 @@ function TrackList({ tracks, playlistId, currentSong, setCurrentSong }) {
 	return (
 		<table className="trackList">
 			<thead>
-				{/* <tr>
-					<th></th>
-					<th>Duration</th>
-					<th>Album</th>
-				</tr> */}
 			</thead>
 			<tbody>
 				{track}

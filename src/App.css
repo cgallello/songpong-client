@@ -4,6 +4,11 @@ html, body, #root, main{
 	overflow:scroll;
 }
 
+.mainWrapper{
+	max-width:800px;
+	margin:0 auto;
+}
+
 input{
 	width:calc(100% - 200px);
 	font-size:16px;
@@ -14,27 +19,19 @@ input{
 	width:150px;
 }
 
-
-/* Search List */
-
-
 /* Track List */
 .trackList{
 	width:100%;
 	text-align: left;
 	vertical-align: middle;
-	/* display:flex; */
-	/* justify-content:space-between;  */
-}
-
-.trackList img{
-	border-radius:100%;
-	width:40px;
-	height:40px;
 }
 
 .trackRow:hover{
 	background-color:rgba(0,0,0,0.05);
+}
+
+.trackRow.playable:hover{
+	cursor:pointer;
 }
 
 .trackName{
@@ -55,7 +52,7 @@ input{
 	align-self: center;
 }
 
-.trackTitleContainer div{
+.trackTitleContainer > div{
 	display:flex;
 	flex-direction: column;
 	text-align: left;
@@ -67,10 +64,48 @@ input{
 	align-self: flex-start;
 }
 
-.playable:hover{
-	background-color:rgba(0,0,0,0.05);
-	cursor:pointer;
+.albumArtworkContainer{
+	width:40px;
+	height:40px;
+	border-radius:100%;
+	position: relative;
 }
+
+.trackRow.playable:hover .playText{
+	visibility: visible;
+}
+
+.trackRow img{
+	border-radius:100%;
+	width:40px;
+	height:40px;
+	position:absolute;
+	left:0; top:0; 
+	width:100%;
+	height:100%;
+}
+
+.playText{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	position:absolute;
+	left:0; top:0; 
+	width:100%;
+	height:100%;
+	color:white;
+	visibility: hidden;
+	margin:0;
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 
 /* Web Playback */
 

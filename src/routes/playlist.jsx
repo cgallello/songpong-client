@@ -7,13 +7,11 @@ import axiosInstance from '../components/HTTPintercept';
 export default function Playlist() {
 
 	const { playlistUrlId } = useParams();
-	const [playlistData, setPlaylistData] = useState();
+	const [playlistData, setPlaylistData] = useState(null);
 	const [playlistTrackData, setPlaylistTrackData] = useState([]);
 	const [playlistId, setPlaylistId] = useState('');
-	const [playlistCreated, setPlaylistCreated] = useState(false);
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
-
 	const location = useLocation();
 	
 	useEffect(() => {
@@ -21,7 +19,7 @@ export default function Playlist() {
 	}, [location.pathname]);
 
 	async function getPlaylistAPI() {
-		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId;
+		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId + playlistId + '?&timestamp=' + new Date().getTime();
 		let tmpResultsArray = [];
 		try {
 			const response = await axiosInstance.get(endpointURL);
@@ -75,10 +73,13 @@ export default function Playlist() {
 
 	return (
 		<main>
-			<div className="editWrapper">
-				<div><a href="/search">Add to playlist</a></div>
-				<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-					<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+			<div className="mainWrapper">
+				<div className="editWrapper">
+					<h1>{playlistData && playlistData.name}</h1>
+					<div><a href="/search">Add to playlist</a></div>
+					<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+						<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+					</div>
 				</div>
 			</div>
 			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />

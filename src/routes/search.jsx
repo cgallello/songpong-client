@@ -9,31 +9,12 @@ export default function Search() {
 	const [inputValue, setInputValue] = useState('');
 	const [searchResultsData, setSearchResultsData] = useState([]);
 	const [playlistId, setPlaylistId] = useState('');
-	const [playlistCreated, setPlaylistCreated] = useState(false);
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
-
-	if (!playlistCreated) {
-		// createPlaylistAPI();
-	}
 
 	useEffect(() => {
 		setPlaylistId(localStorage.getItem('playlistId'));
 	}, []);
-
-	async function createPlaylistAPI() {
-		setPlaylistCreated(true);
-		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
-		try {
-			const response = await axiosInstance.put(endpointURL, {
-				'name': 'Song Pong Playlist',
-				'public': true
-			});
-			localStorage.setItem('spotifyPlaylistId', response.data.id);
-			setPlaylistId(response.data.id);
-			localStorage.setItem("playlistId", response.data.id);
-		} catch (error) { }
-	}
 
 	async function searchAPI(e) {
 		currentAudio && currentAudio.pause();
@@ -98,21 +79,23 @@ export default function Search() {
 
 	return (
 		<main>
-			<BackButton></BackButton>
-			<div className="editWrapper">
-				<form onSubmit={submitSearch}>
-					<input
-						type="text"
-						placeholder="search"
-						autoFocus
-						id="searchQuery"
-						value={inputValue}
-						onChange={handleChange}
-					/>
-					<input type="submit" className="search" value="Search"></input>
-				</form>
-				<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-					<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+			<div className="mainWrapper">
+				<BackButton></BackButton>
+				<div className="editWrapper">
+					<form onSubmit={submitSearch}>
+						<input
+							type="text"
+							placeholder="search"
+							autoFocus
+							id="searchQuery"
+							value={inputValue}
+							onChange={handleChange}
+						/>
+						<input type="submit" className="search" value="Search"></input>
+					</form>
+					<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+						<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+					</div>
 				</div>
 			</div>
 			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />
