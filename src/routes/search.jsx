@@ -72,7 +72,13 @@ export default function Search() {
 	}
 
 	const handleChange = (event) => {
+		event.preventDefault();
 		setInputValue(event.target.value);
+	}
+
+	const submitSearch = (event) => {
+		event.preventDefault();
+		searchAPI();
 	}
 
 	const setCurrentSong = (track) => {
@@ -94,7 +100,7 @@ export default function Search() {
 		<main>
 			<BackButton></BackButton>
 			<div className="editWrapper">
-				<form>
+				<form onSubmit={submitSearch}>
 					<input
 						type="text"
 						placeholder="search"
@@ -103,7 +109,7 @@ export default function Search() {
 						value={inputValue}
 						onChange={handleChange}
 					/>
-					<input type="button" className="search" value="Search" onClick={searchAPI}></input>
+					<input type="submit" className="search" value="Search"></input>
 				</form>
 				<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 					<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
