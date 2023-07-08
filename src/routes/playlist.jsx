@@ -18,7 +18,7 @@ export default function Playlist() {
 	
 	useEffect(() => {
 		getPlaylistAPI();
-	}, [location]);
+	}, [location.pathname]);
 
 	async function getPlaylistAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId;

@@ -3,16 +3,16 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
 	baseURL: 'localhost:3000',
-	timeout: 5000,
-	headers: {
-		'Content-Type': 'application/json',
-		'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-	},
+	timeout: 5000
 });
 
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+axiosInstance.defaults.headers.common['Content-Type'] = 'application/json';
+
 axiosInstance.interceptors.response.use(
-	(response) => {
-		return response;
+	(response) => { 
+		console.log(response.data);
+		return response; 
 	},
 	async (error) => {
 		const originalRequest = error.config;
@@ -36,6 +36,12 @@ axiosInstance.interceptors.response.use(
 				axiosInstance.defaults.headers.common[
 					'Authorization'
 					] = `Bearer ${refreshResponse.data.access_token}`;
+				axiosInstance.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
+
+				// Hoping that this updates the original request with the new token
+				originalRequest.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
+				console.log(originalRequest);
+
 				return axiosInstance(originalRequest);
 
 			} catch (refreshError) {
