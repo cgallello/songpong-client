@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
 import axiosInstance from '../components/HTTPintercept';
+import BackButton from '../components/backbutton';
 
 export default function Playlist() {
 
@@ -27,20 +28,12 @@ export default function Playlist() {
 			localStorage.setItem("playlistId", response.data.id);
 			setPlaylistData({
 				id: response.data.id,
-				image: response.data.images[0].url,
+				image: response.data.images[1].url,
 				name: response.data.name,
 				uri: response.data.uri
 			});
 			response.data.tracks.items.forEach((item, index) => {
-				tmpResultsArray.push({
-					name: item.track.name,
-					duration: item.track.duration_ms,
-					albumName: item.track.album.name,
-					albumArtwork: item.track.album.images[2].url,
-					artistName: item.track.artists[0].name,
-					uri: item.track.uri,
-					preview_url: item.track.preview_url
-				});
+				tmpResultsArray.push(item.track);
 				setPlaylistTrackData(tmpResultsArray);
 			});
 		} catch (error) { }
@@ -61,8 +54,8 @@ export default function Playlist() {
 		currentAudio && currentAudio.pause();
 		let spotifyProduct = localStorage.getItem('spotifyProduct');
 		if (spotifyProduct == "free") {
-			if (track.preview_url) {
-				let audio = new Audio(track.preview_url)
+			if (track.track.preview_url) {
+				let audio = new Audio(track.track.preview_url)
 				audio.play();
 				setCurrentAudio(audio);
 			}
@@ -74,15 +67,21 @@ export default function Playlist() {
 	return (
 		<main>
 			<div className="mainWrapper">
-				<div className="editWrapper">
-					<h1>{playlistData && playlistData.name}</h1>
-					<div><a href="/search">Add to playlist</a></div>
-					<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-						<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+				<BackButton />
+				{ playlistData &&
+					<div className="editWrapper">
+						<h1><img src={playlistData.image} alt={playlistData.name} className="albumArtwork" />{playlistData.name}</h1>
+						<div><a href="/search">Add to playlist</a></div>
+						<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+							<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+						</div>
 					</div>
-				</div>
+				}
+				{ !playlistData &&
+					<p>Loading...</p>
+				}
 			</div>
-			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />
+			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong, setCurrentSong }} />
 		</main>
 	);
 }

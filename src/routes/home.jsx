@@ -33,7 +33,6 @@ export default function Home() {
 	return (
 		<main>
 			<div className="mainWrapper">
-				<p><a href="/search">Search 🔎</a></p>
 				<button onClick={createPlaylistAPI}>Create playlist</button>
 				<h2>Playlists</h2>
 				<div>

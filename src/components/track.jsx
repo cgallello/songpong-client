@@ -4,7 +4,11 @@ import axiosInstance from '../components/HTTPintercept';
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
 	const [added, setAdded] = useState(false);
-	const isCurrentSong = (track.preview_url && currentSong === track.preview_url) || (track === currentSong);
+	const [isCurrentSong, setIsCurrentSong] = useState(false);
+
+	useEffect(() => {
+		setIsCurrentSong((track.preview_url && currentSong === track.preview_url) || (track === currentSong));
+	}, [currentSong]);
 
 	async function addToPlaylistAPI(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
@@ -30,23 +34,23 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 	    const minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
 	    seconds = seconds % 60;
 		if(hours>0){
-			return hours+":"+minutes+":"+Math.round(seconds);
+			return hours+":" + (minutes < 10 ? "0" : "") + minutes+":"+ (Math.floor(seconds) < 10 ? "0" : "") + Math.floor(seconds);
 		} else {
-			return minutes+":"+Math.round(seconds);
+			return minutes+":"+(Math.floor(seconds) < 10 ? "0" : "") + Math.floor(seconds);
 		}
 	}
 
 	return (
 		<tr className={"trackRow" + (track.preview_url ? " playable" : "")} onClick={() => setCurrentSong(track)}>
 			<td className="trackTitleContainer">
-				<div className="albumArtworkContainer"><img src={track.albumArtwork} /><div className="playText">▶</div></div>
+				<div className="albumArtworkContainer"><img src={track.album.images[2].url} /><div className="playText">▶</div></div>
 				<div>
 					<p className="trackName">{isCurrentSong ? '🎵' : '' }{track.name}</p>
-					<p>{track.artistName}</p>
+					<p>{track.artists[0].name}</p>
 				</div>
 			</td>
-			<td><p>{msToHMS(track.duration)}</p></td>
-			<td><p>{track.albumName}</p></td>
+			<td><p>{msToHMS(track.duration_ms)}</p></td>
+			<td><p>{track.album.name}</p></td>
 			{playlistId!==null ? (<td>
 				<button onClick={addToPlaylist} disabled={added}>{!added ? 'Add' : 'Added'}</button>
 			</td>):(null)}

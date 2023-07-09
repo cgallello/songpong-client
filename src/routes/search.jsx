@@ -7,13 +7,15 @@ import BackButton from '../components/backbutton';
 export default function Search() {
 
 	const [inputValue, setInputValue] = useState('');
-	const [searchResultsData, setSearchResultsData] = useState([]);
+	const [searchResultsData, setSearchResultsData] = useState(null);
 	const [playlistId, setPlaylistId] = useState('');
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
+    const [playlists, setPlaylists] = useState(null);
 
 	useEffect(() => {
 		setPlaylistId(localStorage.getItem('playlistId'));
+		getPlaylistsAPI();
 	}, []);
 
 	async function searchAPI(e) {
@@ -27,21 +29,9 @@ export default function Search() {
 				name: 'Song Pong Playlist',
 				public: true,
 			});
-			response.data.tracks.items.forEach((item, index) => {
-				tmpResultsArray.push({
-					name: item.name,
-					duration: item.duration_ms,
-					albumName: item.album.name,
-					albumArtwork: item.album.images[2].url,
-					artistName: item.artists[0].name,
-					uri: item.uri,
-					preview_url: item.preview_url,
-				});
-			});
-			setSearchResultsData(tmpResultsArray);
+			setSearchResultsData(response.data.tracks.items);
 		} catch (error) { }
 	}
-
 
 	async function setSongAPI(track) {
 		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
@@ -77,6 +67,14 @@ export default function Search() {
 		}
 	};
 
+    async function getPlaylistsAPI() {
+		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
+		try {
+			const response = await axiosInstance.get(endpointURL);
+			setPlaylists(response.data);
+		} catch (error) { }
+	}
+
 	return (
 		<main>
 			<div className="mainWrapper">
@@ -93,12 +91,21 @@ export default function Search() {
 						/>
 						<input type="submit" className="search" value="Search"></input>
 					</form>
-					<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-						<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
-					</div>
+					{searchResultsData && 
+						<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+							<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+						</div>
+					}
+					{!searchResultsData &&
+						<div>
+							{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
+								<div key={i}><p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p></div>)
+							) : (<p>Loading...</p>)}
+						</div>
+					}
 				</div>
 			</div>
-			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong }} />
+			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong, setCurrentSong }} />
 		</main>
 	);
 }

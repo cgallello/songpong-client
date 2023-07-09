@@ -12,7 +12,7 @@ const track = {
     ]
 }
 
-function WebPlayback({access_token, currentSong}) {
+function WebPlayback({access_token, currentSong, setCurrentSong}) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
@@ -46,11 +46,14 @@ function WebPlayback({access_token, currentSong}) {
                     return;
                 }
                 setTrack(state.track_window.current_track);
+                setCurrentSong(state.track_window.current_track);
                 setPaused(state.paused);
                 player.getCurrentState().then( state => { 
                     (!state)? setActive(false) : setActive(true) 
-                    if(state.paused && state.position === 0){
-                        setPaused(state.paused);
+                    if(typeof state.paused !== 'undefined'){
+                        if(state.paused && state.position === 0){
+                            setPaused(state.paused);
+                        }
                     }
                 });
                 // setCurrentSong(state.track_window.current_track, 'previous_next');
@@ -64,7 +67,7 @@ function WebPlayback({access_token, currentSong}) {
     return (
         <>
             <div className={currentSong ? "playbackContainer" : "playbackContainer hidden"} key={currentSong}>
-                <img src={current_track.album ? current_track.album.images[0].url : ""} className="now-playing__cover" alt="" />
+                <img src={current_track.album && current_track.album.images[0].url} className="now-playing__cover" alt="" />
                 <div className="now-playing__track-info">
                     <div className="now-playing__name">{current_track.name}</div>
                     <div className="now-playing__artist">{current_track.artists[0].name}</div>
