@@ -11,7 +11,6 @@ axiosInstance.defaults.headers.common['Content-Type'] = 'application/json';
 
 axiosInstance.interceptors.response.use(
 	(response) => { 
-		console.log(response.data);
 		return response; 
 	},
 	async (error) => {
@@ -33,9 +32,7 @@ axiosInstance.interceptors.response.use(
 				);
 				localStorage.setItem('access_token', refreshResponse.data.access_token);
 				localStorage.setItem('refresh_token', refreshResponse.data.refresh_token);
-				// axiosInstance.defaults.headers.common[
-					// 'Authorization'
-					// ] = `Bearer ${refreshResponse.data.access_token}`;
+				axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.access_token}`;
 				// axiosInstance.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
 
 				// Hoping that this updates the original request with the new token

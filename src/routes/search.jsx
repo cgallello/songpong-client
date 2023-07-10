@@ -71,8 +71,13 @@ export default function Search() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
 			const response = await axiosInstance.get(endpointURL);
+			response.data.items = response.data.items.filter(x => x.id !== playlistId);
 			setPlaylists(response.data);
 		} catch (error) { }
+	}
+
+	function playlistAddMode(){
+		setPlaylistId(localStorage.setItem('playlistId'. playlistId));
 	}
 
 	return (
@@ -99,7 +104,7 @@ export default function Search() {
 					{!searchResultsData &&
 						<div>
 							{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
-								<div key={i}><p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p></div>)
+								<div key={i}><p><a href={"/playlist/" + playlist.id + "?p=" + playlistId} onClick={playlistAddMode}>{playlist.name} &gt;</a></p></div>)
 							) : (<p>Loading...</p>)}
 						</div>
 					}

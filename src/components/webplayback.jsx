@@ -29,7 +29,6 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                 getOAuthToken: cb => { cb(access_token); },
                 volume: 0.5
             });
-
             setPlayer(player);
 
             player.addListener('ready', ({ device_id }) => {
@@ -45,9 +44,12 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                 if (!state) {
                     return;
                 }
+                // setTrack and setCurrentSong should probably be combined into one state.
                 setTrack(state.track_window.current_track);
                 setCurrentSong(state.track_window.current_track);
-                setPaused(state.paused);
+                if(typeof state.paused !== 'undefined'){
+                    setPaused(state.paused);
+                }
                 player.getCurrentState().then( state => { 
                     (!state)? setActive(false) : setActive(true) 
                     if(typeof state.paused !== 'undefined'){
@@ -56,9 +58,7 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                         }
                     }
                 });
-                // setCurrentSong(state.track_window.current_track, 'previous_next');
-
-                // TODO: If next/previous song clicked, update currentSong.
+                setCurrentSong(state.track_window.current_track, 'previous_next');
             }));
             player.connect();
         };
@@ -67,7 +67,9 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
     return (
         <>
             <div className={currentSong ? "playbackContainer" : "playbackContainer hidden"} key={currentSong}>
-                <img src={current_track.album && current_track.album.images[0].url} className="now-playing__cover" alt="" />
+                {current_track.album && 
+                    <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
+                }
                 <div className="now-playing__track-info">
                     <div className="now-playing__name">{current_track.name}</div>
                     <div className="now-playing__artist">{current_track.artists[0].name}</div>

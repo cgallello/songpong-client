@@ -7,7 +7,9 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 	const [isCurrentSong, setIsCurrentSong] = useState(false);
 
 	useEffect(() => {
-		setIsCurrentSong((track.preview_url && currentSong === track.preview_url) || (track === currentSong));
+		if(track !== null && currentSong !== null){
+			setIsCurrentSong((track.preview_url && currentSong === track.preview_url) || (track.id == currentSong.id));
+		}
 	}, [currentSong]);
 
 	async function addToPlaylistAPI(trackUri, playlistId) {
@@ -51,7 +53,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 			</td>
 			<td><p>{msToHMS(track.duration_ms)}</p></td>
 			<td><p>{track.album.name}</p></td>
-			{playlistId!==null ? (<td>
+			{playlistId !== null ? (<td>
 				<button onClick={addToPlaylist} disabled={added}>{!added ? 'Add' : 'Added'}</button>
 			</td>):(null)}
 		</tr>

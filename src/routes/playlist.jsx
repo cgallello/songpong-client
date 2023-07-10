@@ -14,6 +14,9 @@ export default function Playlist() {
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
 	const location = useLocation();
+
+	const urlParams = new URLSearchParams(window.location.search);
+	let code = urlParams.get('p');
 	
 	useEffect(() => {
 		getPlaylistAPI();
@@ -73,7 +76,7 @@ export default function Playlist() {
 						<h1><img src={playlistData.image} alt={playlistData.name} className="albumArtwork" />{playlistData.name}</h1>
 						<div><a href="/search">Add to playlist</a></div>
 						<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-							<TrackList tracks={playlistTrackData} playlistId={null} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+							<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 						</div>
 					</div>
 				}
