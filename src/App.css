@@ -1,3 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Kodchasan:wght@500&display=swap');
+
+
+html{
+	/* background color: linear gradient from BF2F3A to BF2F3A */
+	/* background-color:#BF2F3A; */
+	background-image: linear-gradient(0deg, #BF2F3A 0%, #700EC2 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: center;
+	font-family: 'Kodchasan', sans-serif;
+	color:white;
+	font-size:13px;
+}
+
+a{
+	color:white;
+}
+
+a:visited{
+	color:#e1d7e9
+}
+
+button{
+	color:white;
+	font-family: inherit;
+	border: 2px solid white;
+	padding:10px 20px;
+	border-radius:40px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+button:hover{
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+
+
 html, body, #root, main{
 	margin:0px;
 	height:100%;
@@ -17,6 +57,92 @@ input{
 
 .search{
 	width:176px;
+}
+
+/* Homepage */
+
+.homepage{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+	text-align: center;
+}
+
+h1, h2{
+	color:white;
+}
+
+/* animate .spotifyLogin button to bounce around as if it's being hit by two pong paddles */
+
+
+
+
+.loginWrapper{
+	margin-top:50px;
+}
+
+@keyframes bounce {
+	0%   { translate: -30px -10px;  	}
+	20%  { translate: 30px 10px; 	}
+	40%  { translate: 0px -10px; 	}
+	60%  { translate: -30px 5px; 	}
+	80%  { translate: 30px 8px; 		}
+	100% { translate: -30px -10px; 		}
+}
+
+.spotifyLogin{
+	animation: bounce 5s infinite linear;
+	display:inline-flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+	background-color:#1FD664;
+	color:white;
+	width:250px;
+	height:50px;
+	border:0px;
+	border-radius:100px;
+	margin:0 30px;
+}
+
+.spotifyLogin:hover{
+	cursor:pointer;
+	background-color: #1ac059;
+}
+
+.paddle{
+	height:40px;
+	width:5px;
+	background-color: white;
+	border-radius:20px;
+	display:inline-block;
+}
+
+@keyframes paddleone{
+	0%   { translate: 0px 20px; }
+	20%  { translate: 0px -20px; }
+	40%  { translate: 0px 0px; }
+	60%  { translate: 0px 20px; }
+	80%  { translate: 0px -20px; }
+	100% { translate: 0px 20px; }
+}
+
+.paddle.one{
+	animation: paddleone 5s infinite linear;
+}
+
+@keyframes paddletwo{
+	0%   { translate: 0px -20px; }
+	20%  { translate: 0px 20px; }
+	40%  { translate: 0px 0px; }
+	60%  { translate: 0px -20px; }
+	80%  { translate: 0px 20px; }
+	100% { translate: 0px -20px; }
+}
+
+.paddle.two{
+	animation: paddletwo 5s infinite linear;
 }
 
 /* Playlist */
@@ -50,7 +176,11 @@ input{
 }
 
 .trackName{
-	font-size:20px;
+	font-size:16px;
+}
+
+.artistName{
+	color:rgba(255, 255, 255, 0.75);
 }
 
 .trackTitleContainer{
@@ -85,6 +215,18 @@ input{
 	border-radius:100%;
 	position: relative;
 }
+
+
+.albumArtworkContainer img.playing{
+	animation: rotating 2s infinite linear;
+}
+
+@keyframes rotating {
+	0%   { transform:rotate(0);}
+	50%  { transform:rotate(180deg);}
+	100% { transform:rotate(359deg);}
+}
+	
 
 .trackRow.playable:hover .playText{
 	visibility: visible;
@@ -131,9 +273,9 @@ input{
 	flex-wrap:no-wrap;
 	border-top:1px solid rgba(0,0,0,0.5);
 	padding:10px;
-	background-color:white;
+	background-color: rgba(0,0,0,0.75);
 	max-height:50px;
-	width:100%;
+	width:calc(100% - 20px);
 }
 
 .now-playing__cover{
@@ -154,3 +296,8 @@ input{
 .hidden{
 	visibility:hidden;
 }
+
+.btn-spotify{
+	margin-right:10px;
+}
+

@@ -37,7 +37,7 @@ export default function Home() {
 				<h2>Playlists</h2>
 				<div>
 					{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
-						<p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p>)
+						<div key={i}><p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p></div>)
 					) : (<p>Loading...</p>)}
 				</div>
 			</div>

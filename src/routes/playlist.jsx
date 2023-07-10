@@ -17,7 +17,6 @@ export default function Playlist() {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	let code = urlParams.get('p');
-	
 	useEffect(() => {
 		getPlaylistAPI();
 	}, [location.pathname]);
@@ -31,14 +30,14 @@ export default function Playlist() {
 			localStorage.setItem("playlistId", response.data.id);
 			setPlaylistData({
 				id: response.data.id,
-				image: response.data.images[1].url,
+				image: response.data.images[0].url,
 				name: response.data.name,
 				uri: response.data.uri
 			});
 			response.data.tracks.items.forEach((item, index) => {
 				tmpResultsArray.push(item.track);
-				setPlaylistTrackData(tmpResultsArray);
 			});
+			setPlaylistTrackData(tmpResultsArray);
 		} catch (error) { }
 	}
 

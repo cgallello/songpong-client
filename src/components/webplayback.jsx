@@ -76,7 +76,7 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                 </div>
                 <div className="now-playing__controls">
                     <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
-                        &lt;&lt;
+                        ◀
                     </button>
 
                     <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
@@ -84,7 +84,7 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                     </button>
 
                     <button className="btn-spotify" onClick={() => { player.nextTrack(); }} >
-                        &gt;&gt;
+                        ▶
                     </button>
                 </div>
             </div>

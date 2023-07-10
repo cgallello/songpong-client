@@ -45,10 +45,10 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 	return (
 		<tr className={"trackRow" + (track.preview_url ? " playable" : "")} onClick={() => setCurrentSong(track)}>
 			<td className="trackTitleContainer">
-				<div className="albumArtworkContainer"><img src={track.album.images[2].url} /><div className="playText">▶</div></div>
+				<div className="albumArtworkContainer"><img src={track.album.images[2].url} className={isCurrentSong ? 'playing' : '' } /><div className="playText">▶</div></div>
 				<div>
-					<p className="trackName">{isCurrentSong ? '🎵' : '' }{track.name}</p>
-					<p>{track.artists[0].name}</p>
+					<p className="trackName">{track.name}</p>
+					<p className="artistName">{track.artists[0].name}</p>
 				</div>
 			</td>
 			<td><p>{msToHMS(track.duration_ms)}</p></td>

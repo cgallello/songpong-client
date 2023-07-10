@@ -52,7 +52,15 @@ export default function Login() {
 
 	return (
 		<main>
-			<button onClick={requestAuth}>Login with Spotify</button>
+			<div className="homepage mainWrapper">
+				<h1 className="logo">Song Pong</h1>
+				<h2> Build playlists with friends for road trips, parties, and stuff</h2>
+				<div className="loginWrapper">
+					<div className="paddle one"></div>
+					<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
+					<div className="paddle two"></div>
+				</div>
+			</div>
 		</main>
 	);
 }
