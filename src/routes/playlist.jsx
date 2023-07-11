@@ -10,6 +10,7 @@ export default function Playlist() {
 	const { playlistUrlId } = useParams();
 	const [playlistData, setPlaylistData] = useState(null);
 	const [playlistTrackData, setPlaylistTrackData] = useState([]);
+	const [playlistDataLoaded, setPlaylistDataLoaded] = useState(false);
 	const [playlistId, setPlaylistId] = useState('');
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
@@ -28,16 +29,28 @@ export default function Playlist() {
 			const response = await axiosInstance.get(endpointURL);
 			document.title = response.data.name + ' – Song Pong';
 			localStorage.setItem("playlistId", response.data.id);
-			setPlaylistData({
-				id: response.data.id,
-				image: response.data.images[0].url,
-				name: response.data.name,
-				uri: response.data.uri
-			});
+			console.log(response.data);
+			if (response.data.images[0] != null) {
+				setPlaylistData({
+					id: response.data.id,
+					image: response.data.images[0].url,
+					name: response.data.name,
+					uri: response.data.uri
+				});
+			} else {
+				setPlaylistData({
+					id: response.data.id,
+					image: "",
+					name: response.data.name,
+					uri: response.data.uri
+				});
+			}
+
 			response.data.tracks.items.forEach((item, index) => {
 				tmpResultsArray.push(item.track);
 			});
 			setPlaylistTrackData(tmpResultsArray);
+			setPlaylistDataLoaded(true);
 		} catch (error) { }
 	}
 
@@ -68,20 +81,30 @@ export default function Playlist() {
 
 	return (
 		<main>
-			<div className="mainWrapper">
-				<BackButton />
-				{ playlistData &&
-					<div className="editWrapper">
-						<h1><img src={playlistData.image} alt={playlistData.name} className="albumArtwork" />{playlistData.name}</h1>
-						<div><a href="/search">Add to playlist</a></div>
-						<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
-							<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+			<div className="mainPadding">
+				<div className="mainWrapper">
+					<BackButton />
+					{playlistDataLoaded &&
+						<div className="editWrapper">
+							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name}</h1>
+							<a href="/search">
+								<div className="addContainer">It's your turn! Add 3 songs
+									<div className="arrow">
+										<svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M7.42298 7.43117L1.66833 13.1858C1.35335 13.5008 0.814778 13.2777 0.814778 12.8323L0.814778 1.32297C0.814778 0.877518 1.35335 0.654434 1.66833 0.969416L7.42298 6.72407C7.61824 6.91933 7.61824 7.23591 7.42298 7.43117Z" stroke="white" strokeLinejoin="round"/>
+										</svg>
+									</div>
+								</div>
+							</a>
+							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
+								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+							</div>
 						</div>
-					</div>
-				}
-				{ !playlistData &&
-					<p>Loading...</p>
-				}
+					}
+					{!playlistDataLoaded &&
+						<p>Loading...</p>
+					}
+				</div>
 			</div>
 			<WebPlayback {...{ access_token: localStorage.getItem('access_token'), currentSong, setCurrentSong }} />
 		</main>

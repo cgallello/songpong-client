@@ -1,9 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Kodchasan:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kodchasan:wght@500;700&display=swap');
 
 
 html{
-	/* background color: linear gradient from BF2F3A to BF2F3A */
-	/* background-color:#BF2F3A; */
 	background-image: linear-gradient(0deg, #BF2F3A 0%, #700EC2 100%);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
@@ -12,6 +10,22 @@ html{
 	font-family: 'Kodchasan', sans-serif;
 	color:white;
 	font-size:13px;
+	font-weight:500;
+}
+
+html, body, #root, main{
+	margin:0px;
+	height:100%;
+	overflow:scroll;
+}
+
+h1{
+	font-weight:700;
+	font-size:50px;
+}
+
+h2{
+	font-weight:500;
 }
 
 a{
@@ -33,30 +47,76 @@ button{
 }
 
 button:hover{
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
-
-
-html, body, #root, main{
-	margin:0px;
-	height:100%;
-	overflow:scroll;
-}
 
 .mainWrapper{
-	max-width:800px;
+	margin:0 20px;
+}
+
+.mainPadding{
 	margin:20px auto 0 auto;
+	max-width:800px;
+}
+
+.searchBar{
+	border: 2px solid white;
+	border-radius: 100px;
+	color:white;
+	display:flex;
+	align-items: center;
+	justify-content: space-between;
+	height:70px;
+	margin:20px 0;
+}
+
+.searchBar svg{
+	display:inline;
+	transform: translateX(70px);
+	pointer-events: none;
 }
 
 input{
 	width:calc(100% - 200px);
 	font-size:16px;
 	padding:10px;
+	margin:0 20px;
+	background-color: transparent;
+	outline:none;
+	border:none;
+	font-family: 'Kodchasan', sans-serif;
+	caret-color: white;
+	color:white;
+}
+
+input::placeholder{
+	color:rgba(255, 255, 255, 0.5);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #ffffff;
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: inset 0 0 20px 20px rgba(0,0,0,0);
 }
 
 .search{
-	width:176px;
+	width:50px;
+	height:50px;
+	background-color: transparent;
+	border: 2px solid white;
+	border-radius: 100px;
+	color:white;
+	display: inline;
+	cursor:pointer;
+}
+
+.search:hover{
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Homepage */
@@ -146,12 +206,45 @@ h1, h2{
 }
 
 /* Playlist */
+
 .editWrapper h1{
 	vertical-align: middle;
 	font-size:40px;
 	display:flex;
 	align-items: center;
 }
+
+.addContainer{
+	border:2px solid white;
+	border-radius:100px;
+	display:inline-flex;
+	flex-direction: row;
+	align-items: center;
+	height:50px;
+	padding:0 20px;
+	min-width:300px;
+	justify-content:space-between;
+	font-weight:700;
+}
+
+.addContainer:hover{
+	cursor:pointer;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.arrow{
+	display:inline-flex;
+	width:30px;
+	height:30px;
+	align-items: center;
+	text-align: center;
+}
+
+.arrow svg{
+	margin:0 auto;
+	padding-left:2px;
+}
+
 
 .albumArtwork{
 	width:120px;
@@ -160,15 +253,16 @@ h1, h2{
 	margin:0 30px 0 0;
 }
 
+.albumArtwork.empty{
+	border:2px solid white;
+}
+
 /* Track List */
 .trackList{
 	width:100%;
 	text-align: left;
+	margin-top: 20px;
 	vertical-align: middle;
-}
-
-.trackRow:hover{
-	background-color:rgba(0,0,0,0.05);
 }
 
 .trackRow.playable:hover{
@@ -289,6 +383,15 @@ h1, h2{
 	padding-left:10px;
 }
 
+.now-playing__name{
+	font-size:16px;
+	margin-top:3px;
+}
+
+.now-playing__artist{
+	color:rgba(255, 255, 255, 0.65);
+}
+
 .now-playing__controls{
 	
 }
@@ -299,5 +402,14 @@ h1, h2{
 
 .btn-spotify{
 	margin-right:10px;
+	width:40px;
+	display:inline-flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+}
+
+.playpause{
+	width:92px;
 }
 

@@ -79,7 +79,7 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                         ◀
                     </button>
 
-                    <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
+                    <button className="btn-spotify playpause" onClick={() => { player.togglePlay() }} >
                         { is_paused ? "PLAY" : "PAUSE" }
                     </button>
 

@@ -32,13 +32,15 @@ export default function Home() {
 
 	return (
 		<main>
-			<div className="mainWrapper">
-				<button onClick={createPlaylistAPI}>Create playlist</button>
-				<h2>Playlists</h2>
-				<div>
-					{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
-						<div key={i}><p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p></div>)
-					) : (<p>Loading...</p>)}
+			<div className="mainPadding">
+				<div className="mainWrapper">
+					<button onClick={createPlaylistAPI}>Create playlist</button>
+					<h2>Playlists</h2>
+					<div>
+						{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
+							<div key={i}><p><a href={"/playlist/" + playlist.id}>{playlist.name} &gt;</a></p></div>)
+						) : (<p>Loading...</p>)}
+					</div>
 				</div>
 			</div>
 		</main>
