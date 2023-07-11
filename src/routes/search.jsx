@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TrackList from '../components/tracklist';
 import WebPlayback from '../components/webplayback';
-import axiosInstance from '../components/HTTPintercept';
+import { spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
 
 export default function Search() {
@@ -25,7 +25,7 @@ export default function Search() {
 			'https://api.spotify.com/v1/search?q=' + searchQuery + '&type=track' + '&limit=10';
 		let tmpResultsArray = [];
 		try {
-			const response = await axiosInstance.get(endpointURL, {
+			const response = await spotifyAxios.get(endpointURL, {
 				name: 'Song Pong Playlist',
 				public: true,
 			});
@@ -36,7 +36,7 @@ export default function Search() {
 	async function setSongAPI(track) {
 		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
 		try {
-			const response = await axiosInstance.put(endpointURL, {
+			const response = await spotifyAxios.put(endpointURL, {
 				uris: [track.uri]
 			});
 		} catch (error) { }
@@ -72,7 +72,7 @@ export default function Search() {
 	async function getPlaylistsAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
-			const response = await axiosInstance.get(endpointURL);
+			const response = await spotifyAxios.get(endpointURL);
 			response.data.items = response.data.items.filter(x => x.id !== playlistId);
 			setPlaylists(response.data);
 		} catch (error) { }

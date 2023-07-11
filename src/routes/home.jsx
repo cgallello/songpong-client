@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../components/HTTPintercept';
+import { spotifyAxios, internalAxios } from '../components/HTTPintercept';
 
 export default function Home() {
     const [playlists, setPlaylists] = useState(null);
@@ -11,7 +11,7 @@ export default function Home() {
     async function getPlaylistsAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
-			const response = await axiosInstance.get(endpointURL);
+			const response = await spotifyAxios.get(endpointURL);
 			setPlaylists(response.data);
 		} catch (error) { }
 	}
@@ -19,14 +19,25 @@ export default function Home() {
 	async function createPlaylistAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
-			const response = await axiosInstance.post(endpointURL, {
+			const spotifyResponse = await spotifyAxios.post(endpointURL, {
 				'name': 'Song Pong Playlist',
 				'public': true
 			});
-			localStorage.setItem('spotifyPlaylistId', response.data.id);
-			localStorage.setItem("playlistId", response.data.id);
-			window.location.href = '/playlist/' + response.data.id;
-			console.log(response.data.id);
+			if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
+				localStorage.setItem('spotifyPlaylistId', spotifyResponse.data.id);
+				localStorage.setItem("playlistId", spotifyResponse.data.id);
+				console.log(spotifyResponse.status);
+				const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists', {
+					'spotify_playlist_id': spotifyResponse.data.id,
+					'owner': localStorage.getItem('spotifyId'),
+					'members': [],
+					'tracks': []
+				});
+				console.log(spotifyResponse.status);
+				window.location.href = '/playlist/' + spotifyResponse.data.id;
+			} else {
+				console.log('Error creating playlist');
+			}
 		} catch (error) { }
 	}
 

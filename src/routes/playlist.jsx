@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
-import axiosInstance from '../components/HTTPintercept';
+import { spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
 
 export default function Playlist() {
@@ -26,7 +26,7 @@ export default function Playlist() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId + playlistId + '?&timestamp=' + new Date().getTime();
 		let tmpResultsArray = [];
 		try {
-			const response = await axiosInstance.get(endpointURL);
+			const response = await spotifyAxios.get(endpointURL);
 			document.title = response.data.name + ' – Song Pong';
 			localStorage.setItem("playlistId", response.data.id);
 			if (response.data.images[0] != null) {
@@ -56,7 +56,7 @@ export default function Playlist() {
 	async function setSongAPI(track) {
 		const endpointURL = 'https://api.spotify.com/v1/me/player/play?device_id=' + localStorage.getItem('device_id');
 		try {
-			const response = await axiosInstance.put(endpointURL, {
+			const response = await spotifyAxios.put(endpointURL, {
 				'context_uri': playlistData.uri,
 				'offset': { 'uri': track.uri }
 			});

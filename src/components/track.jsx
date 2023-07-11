@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../components/HTTPintercept';
+import { spotifyAxios }  from '../components/HTTPintercept';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
@@ -15,7 +15,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 	async function addToPlaylistAPI(trackUri, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 		try {
-			const response = await axiosInstance.post(endpointURL,{
+			const response = await spotifyAxios.post(endpointURL,{
 				'uris': [trackUri]
 			});
 		} catch (error) {}

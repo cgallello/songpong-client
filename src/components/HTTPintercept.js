@@ -1,15 +1,21 @@
 import { clientId } from '../config';
 import axios from 'axios';
 
-const axiosInstance = axios.create({
+export const spotifyAxios = axios.create({
 	baseURL: 'localhost:3000',
 	timeout: 5000
 });
+spotifyAxios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+spotifyAxios.defaults.headers.common['Content-Type'] = 'application/json';
 
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-axiosInstance.defaults.headers.common['Content-Type'] = 'application/json';
+export const internalAxios = axios.create({
+	baseURL: 'localhost:3000',
+	timeout: 5000
+});
+internalAxios.defaults.headers.common['Content-Type'] = 'application/json';
 
-axiosInstance.interceptors.response.use(
+
+spotifyAxios.interceptors.response.use(
 	(response) => { 
 		return response; 
 	},
@@ -32,14 +38,14 @@ axiosInstance.interceptors.response.use(
 				);
 				localStorage.setItem('access_token', refreshResponse.data.access_token);
 				localStorage.setItem('refresh_token', refreshResponse.data.refresh_token);
-				// axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.access_token}`;
-				axiosInstance.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
+				// spotifyAxios.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.access_token}`;
+				spotifyAxios.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
 
 				// Hoping that this updates the original request with the new token
 				// originalRequest.headers.Authorization = 'Bearer ' + refreshResponse.data.access_token;
 				console.log(originalRequest);
 
-				return axiosInstance(originalRequest);
+				return spotifyAxios(originalRequest);
 
 			} catch (refreshError) {
 				throw refreshError;
@@ -48,5 +54,3 @@ axiosInstance.interceptors.response.use(
 		return Promise.reject(error);
 	}
 );
-
-export default axiosInstance;

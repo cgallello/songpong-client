@@ -47,25 +47,21 @@ export default function Auth() {
         localStorage.setItem("spotifyProduct", data.product);
 
         postUser(data);
-        // TODO: redirect home but only after response received
-        // window.location = "/home";
     }
 
     async function postUser(data) {
         // log data
         console.log(data);
-        console.log(
-            JSON.stringify({
-                spotify_id: data.id,
-                spotify_access_token: localStorage.getItem("access_token"),
-                spotify_refresh_token: localStorage.getItem("refresh_token"),
-                spotify_email: data.email,
-                spotify_display_name: data.display_name,
-                spotify_avatar_url: null,    //data.images[1].url,  TODO: null check
-                spotify_product: data.product,
-                playlists: [],
-            })
-        );
+        const body = JSON.stringify({
+            spotify_id: data.id,
+            spotify_access_token: localStorage.getItem("access_token"),
+            spotify_refresh_token: localStorage.getItem("refresh_token"),
+            spotify_email: data.email,
+            spotify_display_name: data.display_name,
+            spotify_avatar_url: null,    //data.images[1].url,  TODO: null check
+            spotify_product: data.product,
+            playlists: [],
+        });
 
         const endpointURL = "http://localhost:8000/api/users";
         const response = fetch(endpointURL, {
@@ -73,31 +69,22 @@ export default function Auth() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                spotify_id: data.id,
-                spotify_access_token: localStorage.getItem("access_token"),
-                spotify_refresh_token: localStorage.getItem("refresh_token"),
-                spotify_email: data.email,
-                spotify_display_name: data.display_name,
-                spotify_avatar_url: null,   // data.images[1].url,  TODO: null check
-                spotify_product: data.product,
-                playlists: [],
-            }),
-        });
-            // .then((response) => {
-            //     if (!response.ok) {
-            //         throw new Error(
-            //             "HTTP status " + response.status + response.message
-            //         );
-            //     }
-            //     return response.json();
-            // })
-            // .then((data) => {
-            //     alert("success");
-            // })
-            // .catch((error) => {
-            //     console.error("Error:", error);
-            // });
+            body: body
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(
+                        "HTTP status " + response.status + response.message
+                    );
+                }
+                return response;
+            })
+            .then((data) => {
+                window.location = "/home";
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     }
 
     return <main></main>;
