@@ -29,7 +29,6 @@ export default function Playlist() {
 			const response = await axiosInstance.get(endpointURL);
 			document.title = response.data.name + ' – Song Pong';
 			localStorage.setItem("playlistId", response.data.id);
-			console.log(response.data);
 			if (response.data.images[0] != null) {
 				setPlaylistData({
 					id: response.data.id,

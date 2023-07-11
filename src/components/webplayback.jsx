@@ -51,10 +51,13 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                     setPaused(state.paused);
                 }
                 player.getCurrentState().then( state => { 
-                    (!state)? setActive(false) : setActive(true) 
-                    if(typeof state.paused !== 'undefined'){
-                        if(state.paused && state.position === 0){
-                            setPaused(state.paused);
+                    console.log(state);
+                    if(state !== null){
+                        (!state)? setActive(false) : setActive(true) 
+                        if(typeof state.paused !== 'undefined'){
+                            if(state.paused && state.position === 0){
+                                setPaused(state.paused);
+                            }
                         }
                     }
                 });
