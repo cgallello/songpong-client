@@ -11,7 +11,7 @@ export default function Search() {
 	const [playlistId, setPlaylistId] = useState('');
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
-    const [playlists, setPlaylists] = useState(null);
+	const [playlists, setPlaylists] = useState(null);
 
 	useEffect(() => {
 		setPlaylistId(localStorage.getItem('playlistId'));
@@ -49,7 +49,9 @@ export default function Search() {
 
 	const submitSearch = (event) => {
 		event.preventDefault();
-		searchAPI();
+		if (inputValue.length > 0) {
+			searchAPI();
+		}
 	}
 
 	const setCurrentSong = (track) => {
@@ -67,7 +69,7 @@ export default function Search() {
 		}
 	};
 
-    async function getPlaylistsAPI() {
+	async function getPlaylistsAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
 			const response = await axiosInstance.get(endpointURL);
@@ -78,8 +80,8 @@ export default function Search() {
 
 
 	// Probably can delete
-	function playlistAddMode(){
-		setPlaylistId(localStorage.setItem('playlistId'. playlistId));
+	function playlistAddMode() {
+		setPlaylistId(localStorage.setItem('playlistId'.playlistId));
 	}
 
 	return (
@@ -98,17 +100,26 @@ export default function Search() {
 								onChange={handleChange}
 							/>
 							<svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<circle cx="13.8795" cy="9.18836" r="7.7174" stroke="white"/>
-	<line x1="7.99418" y1="14.856" x2="1.35002" y2="21.5002" stroke="white"/>
-	</svg>
-	<input type="submit" className="search" value=""></input>
+								<circle cx="13.8795" cy="9.18836" r="7.7174" stroke="white" />
+								<line x1="7.99418" y1="14.856" x2="1.35002" y2="21.5002" stroke="white" />
+							</svg>
+							<input type="submit" className="search" value=""></input>
 						</form>
-						{searchResultsData && 
+
+						{/* Show search results */}
+						{searchResultsData && searchResultsData.length > 0 &&
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={searchResultsData} playlistId={playlistId} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 							</div>
 						}
-						{!searchResultsData &&
+
+						{/* No search results found */}
+						{searchResultsData && searchResultsData.length == 0 &&
+							<div>No results</div>
+						}
+
+						{/* Show Playlists OR Loading state */}
+						{searchResultsData == null &&
 							<div>
 								{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
 									<div key={i}><p><a href={"/playlist/" + playlist.id + "?p=" + playlistId} onClick={playlistAddMode}>{playlist.name} &gt;</a></p></div>)
