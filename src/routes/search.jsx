@@ -78,12 +78,6 @@ export default function Search() {
 		} catch (error) { }
 	}
 
-
-	// Probably can delete
-	function playlistAddMode() {
-		setPlaylistId(localStorage.setItem('playlistId'.playlistId));
-	}
-
 	return (
 		<main>
 			<div className="mainPadding">
@@ -122,7 +116,7 @@ export default function Search() {
 						{searchResultsData == null &&
 							<div>
 								{playlists && playlists.items ? (playlists.items.map((playlist, i) =>
-									<div key={i}><p><a href={"/playlist/" + playlist.id + "?p=" + playlistId} onClick={playlistAddMode}>{playlist.name} &gt;</a></p></div>)
+									<div key={i}><p><a href={"/playlist/" + playlist.id + "?p=" + playlistId}>{playlist.name} &gt;</a></p></div>)
 								) : (<p>Loading...</p>)}
 							</div>
 						}
