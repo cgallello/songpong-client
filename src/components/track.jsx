@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { spotifyAxios }  from '../components/HTTPintercept';
+import { spotifyAxios, internalAxios }  from '../components/HTTPintercept';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
@@ -12,12 +12,21 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 		}
 	}, [currentSong]);
 
-	async function addToPlaylistAPI(trackUri, playlistId) {
+	async function addToPlaylistAPI(track, playlistId) {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
 		try {
-			const response = await spotifyAxios.post(endpointURL,{
-				'uris': [trackUri]
+			const spotifyResponse = await spotifyAxios.post(endpointURL,{
+				'uris': [track.uri]
 			});
+			if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
+				const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists/'+playlistId+'/tracks', {
+					'spotify_playlist_id': playlistId,
+					'curator': localStorage.getItem('spotifyId'),
+					'track_id': track.id
+				});
+			} else {
+				console.log('Error adding track to playlist');
+			}
 		} catch (error) {}
 	}
 
@@ -25,7 +34,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 		e.stopPropagation();
 		if(!added){
 			setAdded(true);
-			addToPlaylistAPI(track.uri, playlistId);
+			addToPlaylistAPI(track, playlistId);
 		}
 	}
 
