@@ -11,8 +11,14 @@ export default function Home() {
     async function getPlaylistsAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
-			const response = await spotifyAxios.get(endpointURL);
-			setPlaylists(response.data);
+			const spotifyResponse = await spotifyAxios.get(endpointURL);
+			// use Get User internal API to get the playlist IDs that the user is a member of
+			// Then filter response.data to only include playlists that the user is a member of
+			const internalResponse = await internalAxios.get('http://localhost:8000/api/users/' + localStorage.getItem('spotifyId'));
+			const playlistIds = internalResponse.data.playlists;
+			const filteredPlaylists = spotifyResponse.data.items.filter(playlist => playlistIds.includes(playlist.id));
+			spotifyResponse.data.items = filteredPlaylists;
+			setPlaylists(spotifyResponse.data);
 		} catch (error) { }
 	}
 
