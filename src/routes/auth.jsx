@@ -50,15 +50,13 @@ export default function Auth() {
     }
 
     async function postUser(data) {
-        // log data
-        console.log(data);
         const body = JSON.stringify({
             spotify_id: data.id,
             spotify_access_token: localStorage.getItem("access_token"),
             spotify_refresh_token: localStorage.getItem("refresh_token"),
             spotify_email: data.email,
             spotify_display_name: data.display_name,
-            spotify_avatar_url: null,    //data.images[1].url,  TODO: null check
+            spotify_avatar_url: data.images.length > 0 ? data.images[1].url : null,
             spotify_product: data.product,
             playlists: [],
         });

@@ -277,6 +277,13 @@ h1, h2{
 	color:rgba(255, 255, 255, 0.75);
 }
 
+.avatarUrl{
+	width:25px;
+	height:25px;
+	border-radius:100%;
+	margin-right:10px;
+}
+
 .trackTitleContainer{
 	/* float:left; */
 	text-align: left;
@@ -311,7 +318,7 @@ h1, h2{
 }
 
 
-.albumArtworkContainer img.playing{
+.trackArtwork.playing{
 	animation: rotating 2s infinite linear;
 }
 
@@ -326,7 +333,7 @@ h1, h2{
 	visibility: visible;
 }
 
-.trackRow img{
+.trackArtwork{
 	border-radius:100%;
 	width:40px;
 	height:40px;

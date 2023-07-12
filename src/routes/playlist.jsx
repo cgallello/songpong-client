@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
-import { spotifyAxios } from '../components/HTTPintercept';
+import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
 
 export default function Playlist() {
@@ -26,26 +26,36 @@ export default function Playlist() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId + playlistId + '?&timestamp=' + new Date().getTime();
 		let tmpResultsArray = [];
 		try {
-			const response = await spotifyAxios.get(endpointURL);
-			document.title = response.data.name + ' – Song Pong';
-			localStorage.setItem("playlistId", response.data.id);
-			if (response.data.images[0] != null) {
+			const spotifyResponse = await spotifyAxios.get(endpointURL);
+			const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId);
+			// const parsedInternalResponse = JSON.parse(internalResponse);
+			document.title = spotifyResponse.data.name + ' – Song Pong';
+			localStorage.setItem("playlistId", spotifyResponse.data.id);
+			if (spotifyResponse.data.images[0] != null) {
 				setPlaylistData({
-					id: response.data.id,
-					image: response.data.images[0].url,
-					name: response.data.name,
-					uri: response.data.uri
+					id: spotifyResponse.data.id,
+					image: spotifyResponse.data.images[0].url,
+					name: spotifyResponse.data.name,
+					uri: spotifyResponse.data.uri
 				});
 			} else {
 				setPlaylistData({
-					id: response.data.id,
+					id: spotifyResponse.data.id,
 					image: "",
-					name: response.data.name,
-					uri: response.data.uri
+					name: spotifyResponse.data.name,
+					uri: spotifyResponse.data.uri
 				});
 			}
 
-			response.data.tracks.items.forEach((item, index) => {
+			// add spotify_avatar_url to item.track. spotify_avatar_url is part of the stringified json in internalResponse.data.tracks
+			spotifyResponse.data.tracks.items.forEach((item, index) => {
+				if(internalResponse.data.tracks !== undefined) {
+					internalResponse.data.tracks.forEach((internalItem, internalIndex) => {
+						if(item.track.id === internalItem.spotify_track_id) {
+							item.track.spotify_avatar_url = internalItem.spotify_avatar_url;
+						}
+					});
+				}
 				tmpResultsArray.push(item.track);
 			});
 			setPlaylistTrackData(tmpResultsArray);
