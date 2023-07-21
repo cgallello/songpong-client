@@ -27,9 +27,9 @@ export default function Playlist() {
 		let tmpResultsArray = [];
 		try {
 			const spotifyResponse = await spotifyAxios.get(endpointURL);
-			const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId);
-			// const parsedInternalResponse = JSON.parse(internalResponse);
-			document.title = spotifyResponse.data.name + ' – Song Pong';
+			// const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId);
+			// // const parsedInternalResponse = JSON.parse(internalResponse);
+			document.title = spotifyResponse.data.name + ' – PlaylistGen.com';
 			localStorage.setItem("playlistId", spotifyResponse.data.id);
 			if (spotifyResponse.data.images[0] != null) {
 				setPlaylistData({
@@ -49,13 +49,13 @@ export default function Playlist() {
 
 			// add spotify_avatar_url to item.track. spotify_avatar_url is part of the stringified json in internalResponse.data.tracks
 			spotifyResponse.data.tracks.items.forEach((item, index) => {
-				if(internalResponse.data.tracks !== undefined) {
-					internalResponse.data.tracks.forEach((internalItem, internalIndex) => {
-						if(item.track.id === internalItem.spotify_track_id) {
-							item.track.spotify_avatar_url = internalItem.spotify_avatar_url;
-						}
-					});
-				}
+				// if(internalResponse.data.tracks !== undefined) {
+				// 	internalResponse.data.tracks.forEach((internalItem, internalIndex) => {
+				// 		if(item.track.id === internalItem.spotify_track_id) {
+				// 			item.track.spotify_avatar_url = internalItem.spotify_avatar_url;
+				// 		}
+				// 	});
+				// }
 				tmpResultsArray.push(item.track);
 			});
 			setPlaylistTrackData(tmpResultsArray);
@@ -97,13 +97,13 @@ export default function Playlist() {
 						<div className="editWrapper">
 							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name}</h1>
 							<a href="/search">
-								<div className="addContainer">It's your turn! Add 3 songs
+								{/* <div className="addContainer">It's your turn! Add 3 songs
 									<div className="arrow">
 										<svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M7.42298 7.43117L1.66833 13.1858C1.35335 13.5008 0.814778 13.2777 0.814778 12.8323L0.814778 1.32297C0.814778 0.877518 1.35335 0.654434 1.66833 0.969416L7.42298 6.72407C7.61824 6.91933 7.61824 7.23591 7.42298 7.43117Z" stroke="white" strokeLinejoin="round"/>
 										</svg>
 									</div>
-								</div>
+								</div> */}
 							</a>
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />

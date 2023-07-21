@@ -52,15 +52,15 @@ export default function Login() {
 
 	return (
 		<main>
-			<div className="homepage mainWrapper">
-				<h1 className="logo">Song Pong</h1>
-				<h2> Build playlists with friends for road trips, parties, and stuff</h2>
-				<div className="loginWrapper">
-					<div className="paddle one"></div>
-					<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
-					<div className="paddle two"></div>
+			{/* <div className="fadedWrapper"><div className="fadedWrapper"><div className="fadedWrapper"> */}
+				<div className="homepage mainWrapper">
+					<h1 className="logo">Playlist Gen <span className="faded">(dot com)</span></h1>
+					<h2>Paste in your dark confessions to share them as a playlist</h2>
+					<div className="loginWrapper">
+						<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
+					</div>
 				</div>
-			</div>
+			{/* </div></div></div> */}
 		</main>
 	);
 }
