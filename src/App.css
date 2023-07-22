@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Kodchasan:wght@500;700&display=swap');
 
 
+/* Targets safari on iOS */
+@supports (-webkit-overflow-scrolling: touch) {
+	-webkit-font-smoothing: none;
+  }
+
 html{
 	background-image: linear-gradient(0deg, #BF2F3A 0%, #700EC2 100%);
 	background-repeat: no-repeat;
@@ -21,8 +26,6 @@ html, body, #root, main{
 
 main{
 	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 
 h1{
@@ -44,11 +47,60 @@ h2.genPageHeading{
 	font-size:30px;
 }
 
+.generating p{
+	font-size:40px;
+	font-weight:500;
+	text-align: center;
+	overflow:hidden;
+	white-space:nowrap;
+	font-family:impact;
+}
+
+.generating{
+	background-color:rgb(213, 227, 23);
+	rotate:-10deg;
+	width:140vw;
+	color:black;
+	position:absolute;
+}
+
 h2.generatingHeader{
-	margin-top:-20px;
-	margin-left:10px;
+	margin-top:-30px;
+	font-size:30px;
+	/* translate: 5px 5px; */
+	/* opacity:0.94; */
+	animation: opacityJump 7s infinite ease-in-out;
+	pointer-events: none;
+	opacity: 0.2;
+}
+
+h2.generatingHeaderTop{
+	margin-top:-30px;
 	font-size:30px;
 }
+
+@keyframes opacityJump {	
+	0%   { opacity: 0.02;  	}
+	80%  { opacity: 0.02; 	}
+	90%  { opacity: .2; 		}
+	/* 80%  { opacity: .5; 		} */
+	100% { opacity: 0.02; 	}
+}
+
+.repeatingGenContainer{
+	display:inline-block;
+}
+
+.repeatingGenContainerContainer{
+	width:100%;
+	height:100%;
+	position:absolute;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+}
+
 
 p{
 	font-size:14px;
@@ -121,7 +173,7 @@ button:hover{
 }
 
 input{
-	width:calc(100% - 100px);
+	width:calc(100% - 50px);
 	font-size:14px;
 	padding:10px;
 	margin:0 10px 0 20px;
@@ -148,7 +200,7 @@ input:-webkit-autofill:active{
 }
 
 .search{
-	width:100px;
+	width:60px;
 	height:50px;
 	margin:0;
 	margin-right:10px;
@@ -225,6 +277,10 @@ h1, h2{
 
 /* Playlist */
 
+.editWrapper{
+	margin:20px 0;
+}
+
 .editWrapper h1{
 	vertical-align: middle;
 	font-size:40px;
@@ -287,6 +343,12 @@ h1, h2{
 	cursor:pointer;
 }
 
+.trackRow p{
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+}
+
 .trackName{
 	font-size:16px;
 }
@@ -306,6 +368,7 @@ h1, h2{
 	/* float:left; */
 	text-align: left;
 	display:flex;
+	overflow:hidden;
 }
 
 .trackTitleContainer th{
@@ -321,11 +384,15 @@ h1, h2{
 	flex-direction: column;
 	text-align: left;
 	margin-left:15px;
+    flex-shrink: 0;
 }
 
 .trackTitleContainer p{
 	margin:0 0 5px 5px;
 	align-self: flex-start;
+	text-wrap: nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
 }
 
 .albumArtworkContainer{
@@ -394,6 +461,7 @@ h1, h2{
 	padding:10px;
 	background-color: rgba(0,0,0,0.75);
 	max-height:50px;
+	/* width:100%; */
 	width:calc(100% - 20px);
 }
 
@@ -401,6 +469,7 @@ h1, h2{
 	width:40px;
 	height:40px;
 	border-radius:100%;
+	margin-left:10px;
 }
 
 .now-playing__track-info{
@@ -411,14 +480,26 @@ h1, h2{
 .now-playing__name{
 	font-size:16px;
 	margin-top:3px;
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	width:100%;
+	max-width:100%;
 }
 
 .now-playing__artist{
 	color:rgba(255, 255, 255, 0.65);
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	width:100%;
+	max-width:100%;
 }
 
 .now-playing__controls{
-	
+	display:flex;
+	align-items: center;
+	flex-wrap:nowrap;
 }
 
 .hidden{
@@ -426,12 +507,16 @@ h1, h2{
 }
 
 .btn-spotify{
-	margin-right:10px;
 	width:40px;
 	display:inline-flex;
 	align-items: center;
 	text-align: center;
 	justify-content: center;
+	margin-right:10px;
+}
+
+.btn-spotify:last-child{
+	margin-right:0px;
 }
 
 .playpause{
@@ -487,4 +572,62 @@ h1, h2{
 
 .feedButtons{
 	width:100%;
+}
+
+
+
+@media only screen and (max-width: 800px) {
+    .mainWrapper{
+		padding:10px 20px;
+	}
+
+	.homepage.mainWrapper{
+		margin:10px;
+		padding-top:40px;
+		padding-bottom:40px;
+	}
+	.mainPadding{
+		padding-left:20px;
+		padding-right:20px;
+		margin: auto;
+	}
+
+	.searchBar input{
+		font-size:13px;
+	}
+
+	.editWrapper h1 {
+		font-size:30px;
+	}
+
+	.trackRow td{
+		max-width: 200px;
+	}
+}
+
+@media only screen and (max-width: 415px) {
+	.now-playing__track-info{
+		max-width:130px;
+	}
+
+	.trackRow td{
+		max-width: 230px;
+	}
+
+
+	.generating p{
+		font-size:25px;
+	}
+
+	.albumColumn{
+		display:none;
+	}
+	.editWrapper h1{
+		font-size:25px;
+	}
+
+	.editWrapper h1 img{
+		width:80px;
+		height:80px;
+	}
 }

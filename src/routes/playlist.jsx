@@ -4,8 +4,13 @@ import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
 import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
+import mixpanel from 'mixpanel-browser';
 
 export default function Playlist() {
+
+	useEffect(() => {
+		mixpanel.track_pageview('/playlist/');
+	}, []);
 
 	const { playlistUrlId } = useParams();
 	const [playlistData, setPlaylistData] = useState(null);
@@ -17,6 +22,7 @@ export default function Playlist() {
 	const location = useLocation();
 
 	const urlParams = new URLSearchParams(window.location.search);
+
 	let code = urlParams.get('p');
 	useEffect(() => {
 		getPlaylistAPI();
@@ -73,18 +79,26 @@ export default function Playlist() {
 		} catch (error) { }
 	}
 
-	const setCurrentSong = (track) => {
+	const setCurrentSong = (track, action) => {
 		setCurrentSongState(track);
-		currentAudio && currentAudio.pause();
 		let spotifyProduct = localStorage.getItem('spotifyProduct');
-		if (spotifyProduct == "free") {
-			if (track.track.preview_url) {
-				let audio = new Audio(track.track.preview_url)
-				audio.play();
-				setCurrentAudio(audio);
+
+		if(action == "trackClick"){
+			mixpanel.track('Play Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+			if (spotifyProduct == "premium") {
+				setSongAPI(track);
 			}
-		} else if (spotifyProduct == "premium") {
-			setSongAPI(track);
+		} 
+
+		if(action == "trackClick" || action == "prev_next"){
+			currentAudio && currentAudio.pause();
+			if (spotifyProduct == "free") {
+				if (track.track.preview_url) {
+					let audio = new Audio(track.track.preview_url)
+					audio.play();
+					setCurrentAudio(audio);
+				}
+			}
 		}
 	};
 
@@ -95,16 +109,7 @@ export default function Playlist() {
 					<BackButton />
 					{playlistDataLoaded &&
 						<div className="editWrapper">
-							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name}</h1>
-							<a href="/search">
-								{/* <div className="addContainer">It's your turn! Add 3 songs
-									<div className="arrow">
-										<svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M7.42298 7.43117L1.66833 13.1858C1.35335 13.5008 0.814778 13.2777 0.814778 12.8323L0.814778 1.32297C0.814778 0.877518 1.35335 0.654434 1.66833 0.969416L7.42298 6.72407C7.61824 6.91933 7.61824 7.23591 7.42298 7.43117Z" stroke="white" strokeLinejoin="round"/>
-										</svg>
-									</div>
-								</div> */}
-							</a>
+							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name.substring(0, 30)}</h1>
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 							</div>

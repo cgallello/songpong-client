@@ -1,6 +1,13 @@
 import { clientId, redirectUri } from '../config';
+import mixpanel from 'mixpanel-browser';
+import React, { useEffect } from 'react';
+
 
 export default function Login() {
+	
+	useEffect(() => {
+		mixpanel.track_pageview('Homepage');
+	}, []);
 
 	function generateRandomString(length) {
 		let text = '';
@@ -28,6 +35,8 @@ export default function Login() {
 	}
 
 	function requestAuth() {
+		mixpanel.track('Spotify login click');
+
 		let codeVerifier = generateRandomString(128);
 
 		generateCodeChallenge(codeVerifier).then(codeChallenge => {

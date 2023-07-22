@@ -1,4 +1,5 @@
 import { clientId, redirectUri } from "../config";
+import mixpanel from 'mixpanel-browser';
 
 export default function Auth() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,10 +44,19 @@ export default function Auth() {
 
         const data = await response.json();
         const spotifyId = data.id;
+        await mixpanel.identify(spotifyId);
+        await mixpanel.track('Successful auth');
+        await mixpanel.people.set({
+            $name: data.display_name,
+            $id: data.id,
+            $email: data.email,
+            $product: data.product,
+            $country: data.country,
+        });
+
         localStorage.setItem("spotifyId", spotifyId);
         localStorage.setItem("spotifyProduct", data.product);
 
-        // postUser(data);
         window.location = "/home";
     }
 

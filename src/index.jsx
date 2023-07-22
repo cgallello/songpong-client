@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom/client'
 import {
 	createBrowserRouter,
@@ -7,9 +7,20 @@ import {
 import Home from "./routes/home"
 import Login from "./routes/login"
 import Auth from "./routes/auth"
-import Search from "./routes/search"
 import Playlist from "./routes/playlist"
 import "./App.css"
+import mixpanel from 'mixpanel-browser';
+
+var productionHost = 'playlistgen.com'; 
+var devToken = '48bbe546e75208ca08d25f8fb7b469d6'; 
+var prodToken = '85cd79bafd3553eb0658f852997f374c'; 
+let token = devToken;
+let debug = true;
+if (window.location.hostname.toLowerCase().search(productionHost) > 0) { 
+	token = prodToken;
+	debug = false;
+}
+mixpanel.init(token, { debug: debug, track_pageview: true, persistence: 'localStorage' });
 
 const router = createBrowserRouter([
 	{
@@ -21,10 +32,6 @@ const router = createBrowserRouter([
 		element: <Auth />,
 	},
 	{
-		path: "/search",
-		element: <Search />,
-	},
-	{
 		path: "/home",
 		element: <Home />,
 	},
@@ -33,6 +40,8 @@ const router = createBrowserRouter([
 	  element: <Playlist />,
 	},
 ]);
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<RouterProvider router={router} />

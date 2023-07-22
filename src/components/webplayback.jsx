@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import mixpanel from 'mixpanel-browser';
 
 const track = {
     name: "",
@@ -17,6 +18,13 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
     const [current_track, setTrack] = useState(track);
+    const [oldState, setOldState] = useState(track);
+
+    useEffect(() => {
+        if(currentSong){
+            setTrack(currentSong);
+        }
+    }, [currentSong]);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -44,14 +52,28 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                 if (!state) {
                     return;
                 }
-                // setTrack and setCurrentSong should probably be combined into one state.
-                setTrack(state.track_window.current_track);
-                setCurrentSong(state.track_window.current_track);
-                if(typeof state.paused !== 'undefined'){
+
+                if(typeof state.paused !== 'undefined' && state.paused){
                     setPaused(state.paused);
+                    console.log("pause");
                 }
+
+                // Detect end of track
+                let oldState = window.oldState;
+                if(oldState){
+                    let currentTrackId = oldState.track_window.current_track.id;
+                    for(let i = 0; i < state.track_window.previous_tracks.length; i++){
+                        if(state.track_window.previous_tracks[i].id === currentTrackId){
+                            let track = state.track_window.current_track;
+                            mixpanel.track('Continue Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+                            setCurrentSong(track, 'continue');
+                            setTrack(track);
+                        }
+                    }
+                }
+                window.oldState = state;
+                
                 player.getCurrentState().then( state => { 
-                    console.log(state);
                     if(state !== null){
                         (!state)? setActive(false) : setActive(true) 
                         if(typeof state.paused !== 'undefined'){
@@ -61,11 +83,49 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                         }
                     }
                 });
-                setCurrentSong(state.track_window.current_track, 'previous_next');
             }));
             player.connect();
         };
     }, []);
+
+    function nextTrack(){
+        player.nextTrack().then(() => {
+            player.getCurrentState().then( state => { 
+                if (!state) { return; }
+                if(state.track_window.next_tracks.length === 0){ return; }
+                let track = state.track_window.next_tracks[0];
+                mixpanel.track('Next Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+                setCurrentSong(track, 'prev_next');
+                setTrack(state.track_window.current_track);
+            });
+        });
+    }
+
+    function previousTrack(){
+        player.previousTrack().then(() => {
+            player.getCurrentState().then( state => { 
+                if (!state) { return; }
+                if(state.track_window.previous_tracks.length === 0){ return; }
+                let track = state.track_window.previous_tracks[state.track_window.previous_tracks.length - 1];
+                mixpanel.track('Previous Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+                setCurrentSong(track, 'prev_next');
+                setTrack(state.track_window.current_track);
+            });
+        });
+    }
+
+    function togglePlay(){
+        player.togglePlay().then(() => {
+            player.getCurrentState().then( state => { 
+                if (!state) { return; }
+                if(state.paused){
+                    mixpanel.track('Pause Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+                } else {
+                    mixpanel.track('Play Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+                }
+            });
+        });
+    }
 
     return (
         <>
@@ -78,15 +138,15 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
                     <div className="now-playing__artist">{current_track.artists[0].name}</div>
                 </div>
                 <div className="now-playing__controls">
-                    <button className="btn-spotify" onClick={() => { player.previousTrack() }} >
+                    <button className="btn-spotify" onClick={() => { previousTrack() }} >
                         ◀
                     </button>
 
-                    <button className="btn-spotify playpause" onClick={() => { player.togglePlay() }} >
+                    <button className="btn-spotify playpause" onClick={() => { togglePlay() }} >
                         { is_paused ? "PLAY" : "PAUSE" }
                     </button>
 
-                    <button className="btn-spotify" onClick={() => { player.nextTrack(); }} >
+                    <button className="btn-spotify" onClick={() => { nextTrack(); }} >
                         ▶
                     </button>
                 </div>
