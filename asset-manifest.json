@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/songpong-client/static/css/main.7ccb7e0c.css",
+    "main.js": "/songpong-client/static/js/main.292eb3e9.js",
+    "index.html": "/songpong-client/index.html",
+    "main.7ccb7e0c.css.map": "/songpong-client/static/css/main.7ccb7e0c.css.map",
+    "main.292eb3e9.js.map": "/songpong-client/static/js/main.292eb3e9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7ccb7e0c.css",
+    "static/js/main.292eb3e9.js"
+  ]
+}
