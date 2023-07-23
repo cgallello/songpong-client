@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
@@ -8,9 +8,14 @@ import mixpanel from 'mixpanel-browser';
 
 export default function Playlist() {
 
+	const isFirstRender = useRef(true)
 	useEffect(() => {
-		mixpanel.track_pageview('/playlist/');
-	}, []);
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		mixpanel.track_pageview();
+	}, [])
 
 	const { playlistUrlId } = useParams();
 	const [playlistData, setPlaylistData] = useState(null);

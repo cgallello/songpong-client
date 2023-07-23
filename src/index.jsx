@@ -4,10 +4,10 @@ import {
 	createBrowserRouter,
 	RouterProvider
 } from "react-router-dom"
-import Home from "./routes/home"
-import Login from "./routes/login"
-import Auth from "./routes/auth"
-import Playlist from "./routes/playlist"
+import Home from "./routes/home.jsx"
+import Login from "./routes/login.jsx"
+import Auth from "./routes/auth.jsx"
+import Playlist from "./routes/playlist.jsx"
 import "./App.css"
 import mixpanel from 'mixpanel-browser';
 

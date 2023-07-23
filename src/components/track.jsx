@@ -18,13 +18,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 			const spotifyResponse = await spotifyAxios.post(endpointURL,{
 				'uris': [track.uri]
 			});
-			if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
-				const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists/'+playlistId+'/tracks', {
-					'spotify_playlist_id': playlistId,
-					'curator': localStorage.getItem('spotifyId'),
-					'track_id': track.id
-				});
-			} else {
+			if (spotifyResponse.status < 200 || spotifyResponse.status >= 300) {
 				console.log('Error adding track to playlist');
 			}
 		} catch (error) {}

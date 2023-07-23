@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { spotifyAxios, internalAxios } from '../components/HTTPintercept';
 import mixpanel from 'mixpanel-browser';
 
@@ -13,11 +13,14 @@ export default function Home() {
 	const [premiumFail, setPremiumFail] = useState(false);
 	const [premiumSuccess, setPremiumSuccess] = useState(false);
 
+	const isFirstRender = useRef(true)
 	useEffect(() => {
-		setPremium(localStorage.getItem("premium") === "true");
-		mixpanel.track_pageview('/home');
-		// setGenerating(true);
-	}, []);
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		mixpanel.track_pageview();
+	}, [])
 
 	const handleChange = (event) => {
 		event.preventDefault();
@@ -402,7 +405,7 @@ export default function Home() {
 					<h1>Upgrade to PREMIUM to keep typing!</h1>
 
 					<p>Feed the monkey to upgrade. BUT. DON'T TEASE HIM. HE'S HUNGRY.</p>
-					<img src="/premiummonkey.jpg" alt="premium monkey" width="200" />
+					<img src={process.env.PUBLIC_URL + "/premiummonkey.jpg"} alt="premium monkey" width="200" />
 					<div className="feedButtons">
 						<button className="premiumButton" onClick={premiumFailClick}>Feed 1 bananas</button>
 						<button className="premiumButton" onClick={premiumFailClick}>Feed 5 bananas</button>
@@ -414,7 +417,7 @@ export default function Home() {
 			<div className={showPremium && premiumFail ? "premiumWrapper" : "premiumWrapper hidden"}>
 				<div className="premiumDialog">
 					<h1>Not enough bananas wtf</h1>
-					<img src="/premiumfail.jpg" alt="premium monkey" width="200" />
+					<img src={process.env.PUBLIC_URL + "/premiumfail.jpg"} alt="premium monkey" width="200" />
 					<div className="feedButtons">
 						<button className="premiumButton" onClick={premiumFailClick}>Feed 1 bananas</button>
 						<button className="premiumButton" onClick={premiumFailClick}>Feed 5 bananas</button>
@@ -426,7 +429,7 @@ export default function Home() {
 			<div className={showPremium && premiumSuccess ? "premiumWrapper" : "premiumWrapper hidden"}>
 				<div className="premiumDialog">
 					<h1>He's so happy thank u</h1>
-					<img src="/premiumsuccess.jpg" alt="premium monkey" width="200" />
+					<img src={process.env.PUBLIC_URL + "/premiumsuccess.jpg"} alt="premium monkey" width="200" />
 					<button className="premiumButton" onClick={closePremiumDialog}>Close</button>
 				</div>
 			</div>

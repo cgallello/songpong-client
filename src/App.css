@@ -145,6 +145,7 @@ button:hover{
 	width:100%;
 	box-sizing:border-box;
 	max-width:800px;
+	margin: 30px auto;
 }
 
 .fadedWrapper{
@@ -154,7 +155,7 @@ button:hover{
 }
 
 .mainPadding{
-	margin:20px auto 0 auto;
+	margin:auto;
 	max-width:800px;
 	width:100%;
 }
@@ -229,6 +230,7 @@ input:-webkit-autofill:active{
 	align-items:center;
 	justify-content:center;
 	text-align: center;
+	margin:auto;
 }
 
 h1, h2{
@@ -278,7 +280,7 @@ h1, h2{
 /* Playlist */
 
 .editWrapper{
-	margin:20px 0;
+	margin:40px 0;
 }
 
 .editWrapper h1{
@@ -323,7 +325,6 @@ h1, h2{
 .albumArtwork{
 	width:120px;
 	height:120px;
-	border-radius:100%;
 	margin:0 30px 0 0;
 }
 
@@ -349,8 +350,9 @@ h1, h2{
 	text-overflow: ellipsis;
 }
 
-.trackName{
+.trackTitleContainer .trackName{
 	font-size:16px;
+	margin-bottom:0;
 }
 
 .artistName{
@@ -404,7 +406,7 @@ h1, h2{
 
 
 .trackArtwork.playing{
-	animation: rotating 2s infinite linear;
+	/* animation: rotating 2s infinite linear; */
 }
 
 @keyframes rotating {
@@ -419,7 +421,6 @@ h1, h2{
 }
 
 .trackArtwork{
-	border-radius:100%;
 	width:40px;
 	height:40px;
 	position:absolute;
@@ -468,7 +469,6 @@ h1, h2{
 .now-playing__cover{
 	width:40px;
 	height:40px;
-	border-radius:100%;
 	margin-left:10px;
 }
 
@@ -601,7 +601,7 @@ h1, h2{
 	}
 
 	.trackRow td{
-		max-width: 200px;
+		max-width: 240px;
 	}
 }
 

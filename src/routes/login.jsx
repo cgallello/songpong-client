@@ -1,13 +1,18 @@
-import { clientId, redirectUri } from '../config';
+import { clientId, redirectUri } from '../config.js';
 import mixpanel from 'mixpanel-browser';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 
 export default function Login() {
-	
+
+	const isFirstRender = useRef(true)
 	useEffect(() => {
-		mixpanel.track_pageview('Homepage');
-	}, []);
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		mixpanel.track_pageview();
+	}, [])
 
 	function generateRandomString(length) {
 		let text = '';
