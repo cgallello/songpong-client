@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/songpong-client/static/css/main.7ccb7e0c.css",
-    "main.js": "/songpong-client/static/js/main.292eb3e9.js",
+    "main.css": "/songpong-client/static/css/main.e3b20a01.css",
+    "main.js": "/songpong-client/static/js/main.d4a98dc0.js",
     "index.html": "/songpong-client/index.html",
-    "main.7ccb7e0c.css.map": "/songpong-client/static/css/main.7ccb7e0c.css.map",
-    "main.292eb3e9.js.map": "/songpong-client/static/js/main.292eb3e9.js.map"
+    "main.e3b20a01.css.map": "/songpong-client/static/css/main.e3b20a01.css.map",
+    "main.d4a98dc0.js.map": "/songpong-client/static/js/main.d4a98dc0.js.map"
   },
   "entrypoints": [
-    "static/css/main.7ccb7e0c.css",
-    "static/js/main.292eb3e9.js"
+    "static/css/main.e3b20a01.css",
+    "static/js/main.d4a98dc0.js"
   ]
 }
