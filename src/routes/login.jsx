@@ -9,7 +9,11 @@ export default function Login() {
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
-			mixpanel.track_pageview();
+			if(localStorage.getItem('access_token')) {
+				window.location = '/home';
+			} else {
+				mixpanel.track_pageview();
+			}
 			return;
 		}
 	}, [])

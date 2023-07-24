@@ -20,13 +20,18 @@ export default function Home() {
 			isFirstRender.current = false;
 			setGenerating(false); // Reset generating state in case user comes back from playlist
 
+			if(!localStorage.getItem('access_token')) {
+				window.location = '/';
+			} else {
+				mixpanel.track_pageview();
+			}
+			
 			if(localStorage.getItem("premium") == "true"){
-				console.log("premium true already");
 				setPremium(true);
 			}
+
 			return;
 		}
-		mixpanel.track_pageview();
 	}, [])
 
 	const handleChange = (event) => {
@@ -445,8 +450,8 @@ export default function Home() {
 				<div className="mainWrapper">
 					<div className={generating ? "editor hidden" : "editor"}>
 						<h1 className="logo">Playlist Gen <span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></h1>
-						<p><span className="emoji">✍️</span>Type your deepest darkest thoughts and hit generate.</p> 
-						<p><span className="emoji">🎶</span>I'll create a Spotify playlist in your account for whatever you type.</p>
+						<p><span className="emoji">✍️</span>Type your deepest darkest thoughts and hit go.</p> 
+						<p><span className="emoji">🎶</span>I'll create a Spotify playlist for you with track titles that match what you type.</p>
 						<p><span className="emoji">😒</span>It's not perfect ok?</p>
 
 						<form onSubmit={submitSearch} className="searchBar">
