@@ -8,6 +8,7 @@ import Home from "./routes/home.jsx"
 import Login from "./routes/login.jsx"
 import Auth from "./routes/auth.jsx"
 import Playlist from "./routes/playlist.jsx"
+import Privacy from "./routes/privacypolicy.jsx"
 import "./App.css"
 import mixpanel from 'mixpanel-browser';
 
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Login />,
+	},
+	{
+		path: "/privacy",
+		element: <Privacy />,
 	},
 	{
 		path: "/auth",

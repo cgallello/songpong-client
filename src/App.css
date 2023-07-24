@@ -47,6 +47,10 @@ h2.genPageHeading{
 	font-size:30px;
 }
 
+h3{
+	margin-top:20px;
+}
+
 .generating p{
 	font-size:40px;
 	font-weight:500;
@@ -71,7 +75,7 @@ h2.generatingHeader{
 	/* opacity:0.94; */
 	animation: opacityJump 7s infinite ease-in-out;
 	pointer-events: none;
-	opacity: 0.2;
+	opacity: 0.02;
 }
 
 h2.generatingHeaderTop{
@@ -82,8 +86,7 @@ h2.generatingHeaderTop{
 @keyframes opacityJump {	
 	0%   { opacity: 0.02;  	}
 	80%  { opacity: 0.02; 	}
-	90%  { opacity: .2; 		}
-	/* 80%  { opacity: .5; 		} */
+	90%  { opacity: 0.2; 	}
 	100% { opacity: 0.02; 	}
 }
 
@@ -112,6 +115,14 @@ p{
 	font-size:30px;
 	padding-right:10px;
 	vertical-align: middle;
+}
+
+.premiumTag{
+	font-size:12px;
+	opacity:0.5;
+	vertical-align: top;
+	margin-top: 9px;
+    display: inline-block;
 }
 
 a{
@@ -276,6 +287,11 @@ h1, h2{
 	background-color: #1ac059;
 }
 
+.legal{
+	font-size:13px;
+	color:rgba(255,255,255,0.7);
+	margin-top:60px;
+}
 
 /* Playlist */
 
@@ -288,6 +304,10 @@ h1, h2{
 	font-size:40px;
 	display:flex;
 	align-items: center;
+}
+
+.buttonRow button{
+	margin-right:10px;
 }
 
 .addContainer{
@@ -356,7 +376,7 @@ h1, h2{
 }
 
 .artistName{
-	color:rgba(255, 255, 255, 0.75);
+	color:rgba(255, 255, 255, 0.4);
 }
 
 .avatarUrl{
@@ -371,6 +391,7 @@ h1, h2{
 	text-align: left;
 	display:flex;
 	overflow:hidden;
+	padding-right:10px;
 }
 
 .trackTitleContainer th{
@@ -402,6 +423,10 @@ h1, h2{
 	height:40px;
 	border-radius:100%;
 	position: relative;
+}
+
+.durationColumn{
+	padding-right:10px;
 }
 
 

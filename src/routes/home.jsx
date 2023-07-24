@@ -14,9 +14,16 @@ export default function Home() {
 	const [premiumSuccess, setPremiumSuccess] = useState(false);
 
 	const isFirstRender = useRef(true)
+
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
+			setGenerating(false); // Reset generating state in case user comes back from playlist
+
+			if(localStorage.getItem("premium") == "true"){
+				console.log("premium true already");
+				setPremium(true);
+			}
 			return;
 		}
 		mixpanel.track_pageview();
@@ -52,15 +59,16 @@ export default function Home() {
 		if(generations == null){
 			generations = 0;
 		}
-		if (inputValue.length > 0 && inputValue.length < 200 && !generating && generations < 5) {
+
+		if (inputValue.length > 0 && inputValue.length < 200 && !generating && generations < 20) {
 			mixpanel.track('Generate Playlist', {"input" : inputValue, "length" : inputValue.length });
 
 			generations++;
 			localStorage.setItem("generations", generations);
 			setGenerating(true);
 			let wordsArray = inputValue.split(" ");//match(/\b(\w+)\b/g); //.filter(function(num) { return num != '' }).length;
+			
 			// Remove last element if it is empty – if someone pastes in spaces at the end
-			console.log(wordsArray);
 			for(let i = 0; i < wordsArray.length; i++){
 				if(wordsArray[i] == ""){
 					wordsArray.splice(i, 1);
@@ -436,7 +444,7 @@ export default function Home() {
 			<div className={!generating ? "mainPadding" : "mainPadding hidden"}>
 				<div className="mainWrapper">
 					<div className={generating ? "editor hidden" : "editor"}>
-						<h1 className="logo">Playlist Gen <span className="faded">(.com)</span></h1>
+						<h1 className="logo">Playlist Gen <span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></h1>
 						<p><span className="emoji">✍️</span>Type your deepest darkest thoughts and hit generate.</p> 
 						<p><span className="emoji">🎶</span>I'll create a Spotify playlist in your account for whatever you type.</p>
 						<p><span className="emoji">😒</span>It's not perfect ok?</p>
@@ -466,7 +474,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;
@@ -478,7 +486,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;
@@ -490,7 +498,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;
@@ -502,7 +510,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;
@@ -514,7 +522,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;
@@ -526,7 +534,7 @@ export default function Home() {
 						let td = [];
 						let x = Math.round(window.innerHeight / 30);
 						for (let i = 1; i <= x; i++) {
-							let delay = Math.random() * 7000; //(3000 / 20) * i * ;
+							let delay = Math.round(Math.random() * 7000 - 7000); //(3000 / 20) * i * ;
 							td.push(<h2 key={i} className='generatingHeader' style={{animationDelay:delay + "ms"}}>Generating...</h2>);
 						}
 						return td;

@@ -9,9 +9,9 @@ export default function Login() {
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
+			mixpanel.track_pageview();
 			return;
 		}
-		mixpanel.track_pageview();
 	}, [])
 
 	function generateRandomString(length) {
@@ -73,6 +73,7 @@ export default function Login() {
 					<div className="loginWrapper">
 						<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
 					</div>
+					<p className="legal">By logging in, you agree to our <a href="/privacy">privacy policy</a>.</p>
 				</div>
 			{/* </div></div></div> */}
 		</main>

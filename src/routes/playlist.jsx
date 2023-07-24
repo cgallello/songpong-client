@@ -4,6 +4,7 @@ import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
 import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
+import ShareButton from '../components/sharebutton';
 import mixpanel from 'mixpanel-browser';
 
 export default function Playlist() {
@@ -12,9 +13,9 @@ export default function Playlist() {
 	useEffect(() => {
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
+			mixpanel.track_pageview();
 			return;
 		}
-		mixpanel.track_pageview();
 	}, [])
 
 	const { playlistUrlId } = useParams();
@@ -24,6 +25,7 @@ export default function Playlist() {
 	const [playlistId, setPlaylistId] = useState('');
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
+	const [copied, setCopied] = useState(false);
 	const location = useLocation();
 
 	const urlParams = new URLSearchParams(window.location.search);
@@ -42,12 +44,14 @@ export default function Playlist() {
 			// // const parsedInternalResponse = JSON.parse(internalResponse);
 			document.title = spotifyResponse.data.name + ' – PlaylistGen.com';
 			localStorage.setItem("playlistId", spotifyResponse.data.id);
+			console.log(spotifyResponse.data);
 			if (spotifyResponse.data.images[0] != null) {
 				setPlaylistData({
 					id: spotifyResponse.data.id,
 					image: spotifyResponse.data.images[0].url,
 					name: spotifyResponse.data.name,
-					uri: spotifyResponse.data.uri
+					uri: spotifyResponse.data.uri,
+					url: spotifyResponse.data.external_urls.spotify
 				});
 			} else {
 				setPlaylistData({
@@ -107,6 +111,15 @@ export default function Playlist() {
 		}
 	};
 
+	function truncatedPlaylistName(playlistName){
+		var trimmedString = playlistName.substr(0, 40); 
+		if(playlistName.length > 40){
+			return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
+		} else {
+			return trimmedString;
+		}
+	}
+
 	return (
 		<main>
 			<div className="mainPadding">
@@ -114,7 +127,15 @@ export default function Playlist() {
 					<BackButton />
 					{playlistDataLoaded &&
 						<div className="editWrapper">
-							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name.substring(0, 30)}</h1>
+							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{truncatedPlaylistName(playlistData.name)}</h1>
+							<div className="buttonRow">
+								<button className="button" onClick={() => setCurrentSong(playlistTrackData[0], "trackClick")}>Play all ▶</button>
+								<ShareButton {...{ playlistData }} />
+								<button className="button" onClick={(() => {navigator.clipboard.writeText(playlistData.url); setCopied(true);})}>
+									{!copied ? "Copy Spotify Link" : "Copied!"}
+								</button>
+							</div>
+
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 							</div>
