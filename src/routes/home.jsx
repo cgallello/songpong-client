@@ -25,7 +25,7 @@ export default function Home() {
 			} else {
 				mixpanel.track_pageview();
 			}
-			
+
 			if(localStorage.getItem("premium") == "true"){
 				setPremium(true);
 			}
@@ -449,7 +449,7 @@ export default function Home() {
 			<div className={!generating ? "mainPadding" : "mainPadding hidden"}>
 				<div className="mainWrapper">
 					<div className={generating ? "editor hidden" : "editor"}>
-						<h1 className="logo">Playlist Gen <span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></h1>
+						<h1 className="logo">Playlist Gen <span className="comPremium"><span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></span></h1>
 						<p><span className="emoji">✍️</span>Type your deepest darkest thoughts and hit go.</p> 
 						<p><span className="emoji">🎶</span>I'll create a Spotify playlist for you with track titles that match what you type.</p>
 						<p><span className="emoji">😒</span>It's not perfect ok?</p>
