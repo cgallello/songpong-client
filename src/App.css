@@ -327,6 +327,12 @@ h1, h2{
 	margin-top:60px;
 }
 
+.builtby{
+	font-size:13px;
+	color:rgba(255,255,255,0.7);
+	margin-top:0;
+}
+
 /* Playlist */
 
 .editWrapper{

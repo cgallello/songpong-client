@@ -26,6 +26,7 @@ export default function Playlist() {
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
 	const [copied, setCopied] = useState(false);
+    const [premium, setPremium] = useState(null);
 	const location = useLocation();
 
 	const urlParams = new URLSearchParams(window.location.search);
@@ -34,6 +35,10 @@ export default function Playlist() {
 	useEffect(() => {
 		getPlaylistAPI();
 	}, [location.pathname]);
+
+	useEffect(() => {
+		setPremium(localStorage.getItem("spotifyProduct") === "premium");
+	}, []);
 
 	async function getPlaylistAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId + playlistId + '?&timestamp=' + new Date().getTime();
@@ -44,7 +49,6 @@ export default function Playlist() {
 			// // const parsedInternalResponse = JSON.parse(internalResponse);
 			document.title = spotifyResponse.data.name + ' – PlaylistGen.com';
 			localStorage.setItem("playlistId", spotifyResponse.data.id);
-			console.log(spotifyResponse.data);
 			if (spotifyResponse.data.images[0] != null) {
 				setPlaylistData({
 					id: spotifyResponse.data.id,
@@ -102,8 +106,8 @@ export default function Playlist() {
 		if(action == "trackClick" || action == "prev_next"){
 			currentAudio && currentAudio.pause();
 			if (spotifyProduct == "free") {
-				if (track.track.preview_url) {
-					let audio = new Audio(track.track.preview_url)
+				if (track.preview_url) {
+					let audio = new Audio(track.preview_url)
 					audio.play();
 					setCurrentAudio(audio);
 				}
@@ -129,7 +133,7 @@ export default function Playlist() {
 						<div className="editWrapper">
 							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{truncatedPlaylistName(playlistData.name)}</h1>
 							<div className="buttonRow">
-								<button className="button" onClick={() => setCurrentSong(playlistTrackData[0], "trackClick")}>Play all ▶</button>
+								{premium && <button className="button" onClick={() => setCurrentSong(playlistTrackData[0], "trackClick")}>Play all ▶</button>}
 								<ShareButton {...{ playlistData }} />
 								<button className="button" onClick={(() => {navigator.clipboard.writeText(playlistData.url); setCopied(true);})}>
 									{!copied ? "Copy Spotify Link" : "Copied!"}

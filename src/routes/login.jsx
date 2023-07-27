@@ -78,6 +78,7 @@ export default function Login() {
 						<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
 					</div>
 					<p className="legal">By logging in, you agree to our <a href="/privacy">privacy policy</a>.</p>
+					<p className="builtby">Built by <a href="https://www.twitter.com/cgallello">@cgallello</a> and <a href="https://twitter.com/stedmanhalliday">@stedmanhalliday</a>.</p>
 				</div>
 			{/* </div></div></div> */}
 		</main>

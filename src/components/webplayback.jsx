@@ -18,12 +18,14 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
     const [current_track, setTrack] = useState(track);
+    const [premium, setPremium] = useState(null);
     const [oldState, setOldState] = useState(track);
 
     useEffect(() => {
         if(currentSong){
             setTrack(currentSong);
         }
+        setPremium(localStorage.getItem("spotifyProduct") === "premium");
     }, [currentSong]);
 
     useEffect(() => {
@@ -130,28 +132,30 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
 
     return (
         <>
-            <div className={currentSong ? "playbackContainer" : "playbackContainer hidden"} key={currentSong}>
-                {current_track.album && 
-                    <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
-                }
-                <div className="now-playing__track-info">
-                    <div className="now-playing__name">{current_track.name}</div>
-                    <div className="now-playing__artist">{current_track.artists[0].name}</div>
-                </div>
-                <div className="now-playing__controls">
-                    <button className="btn-spotify" onClick={() => { previousTrack() }} >
-                        ◀
-                    </button>
+            {premium &&
+                <div className={currentSong ? "playbackContainer" : "playbackContainer hidden"} key={currentSong}>
+                    {current_track.album && 
+                        <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
+                    }
+                    <div className="now-playing__track-info">
+                        <div className="now-playing__name">{current_track.name}</div>
+                        <div className="now-playing__artist">{current_track.artists[0].name}</div>
+                    </div>
+                    <div className="now-playing__controls">
+                        <button className="btn-spotify" onClick={() => { previousTrack() }} >
+                            ◀
+                        </button>
 
-                    <button className="btn-spotify playpause" onClick={() => { togglePlay() }} >
-                        { is_paused ? "PLAY" : "PAUSE" }
-                    </button>
+                        <button className="btn-spotify playpause" onClick={() => { togglePlay() }} >
+                            { is_paused ? "PLAY" : "PAUSE" }
+                        </button>
 
-                    <button className="btn-spotify" onClick={() => { nextTrack(); }} >
-                        ▶
-                    </button>
+                        <button className="btn-spotify" onClick={() => { nextTrack(); }} >
+                            ▶
+                        </button>
+                    </div>
                 </div>
-            </div>
+            }
         </>
     );
 }
