@@ -55,7 +55,8 @@ function WebPlayback({access_token, currentSong, setCurrentSong}) {
 
                 if(typeof state.paused !== 'undefined' && state.paused){
                     setPaused(state.paused);
-                    console.log("pause");
+                } else {
+                    setPaused(state.paused);
                 }
 
                 // Detect end of track

@@ -139,6 +139,9 @@ export default function Playlist() {
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
 							</div>
+							<div className="spotifyLogo">
+								<img src="/Spotify_Logo_RGB_White.png" alt="Spotify Logo" />
+							</div>
 						</div>
 					}
 					{!playlistDataLoaded &&

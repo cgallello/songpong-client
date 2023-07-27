@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { spotifyAxios, internalAxios } from '../components/HTTPintercept';
 import mixpanel from 'mixpanel-browser';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
     const [playlists, setPlaylists] = useState(null);
@@ -410,6 +411,11 @@ export default function Home() {
 		} catch (error) { }
 	}
 
+	function Logout(){
+		localStorage.clear();
+		window.location = '/';
+	}
+
 	return (
 		<main>
 			{/* Premium upsell */}
@@ -450,14 +456,16 @@ export default function Home() {
 				<div className="mainWrapper">
 					<div className={generating ? "editor hidden" : "editor"}>
 						<h1 className="logo">Playlist Gen <span className="comPremium"><span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></span></h1>
-						<p><span className="emoji">✍️</span>Type your deepest darkest thoughts and hit go.</p> 
-						<p><span className="emoji">🎶</span>I'll create a Spotify playlist for you with track titles that match what you type.</p>
-						<p><span className="emoji">😒</span>It's not perfect ok?</p>
-
+						<ul className="instructions">
+							<li className="li_one">Type your deepest darkest thoughts.</li>
+							<li className="li_two">I'll create a Spotify playlist with songs that match what you type.</li>
+							<li className="li_three">Copy the playlist link and send it to your crush.</li>
+							<li className="li_four">It's not perfect ok?</li>
+						</ul>
 						<form onSubmit={submitSearch} className="searchBar">
 							<input
 								type="text"
-								placeholder="be unhinged here"
+								placeholder="be unhinged"
 								autoFocus
 								id="searchQuery"
 								value={inputValue}
@@ -472,6 +480,7 @@ export default function Home() {
 						<button onClick={getURIs}>Query Spotify for URIs</button> */}
 					</div>
 				</div>
+				{!showPremium && <div className="logout"><Link href="/" onClick={Logout}>Logout</Link></div>}
 			</div>
 			<div className={generating ? "repeatingGenContainerContainer" : "repeatingGenContainerContainer hidden"}>
 				<div className="repeatingGenContainer">
@@ -545,7 +554,6 @@ export default function Home() {
 						return td;
 					})()}
 				</div>
-				
 			</div>
 		</main>
 	);
