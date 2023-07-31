@@ -2,6 +2,7 @@ import { clientId, redirectUri } from "../config";
 import mixpanel from 'mixpanel-browser';
 
 export default function Auth() {
+    const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
     const urlParams = new URLSearchParams(window.location.search);
     let code = urlParams.get("code");
     let codeVerifier = localStorage.getItem("code_verifier");
@@ -73,7 +74,7 @@ export default function Auth() {
             playlists: [],
         });
 
-        const endpointURL = "http://localhost:8000/api/users";
+        const endpointURL = `${API_URL}/users`;
         const response = fetch(endpointURL, {
             method: "POST",
             headers: {

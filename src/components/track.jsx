@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { spotifyAxios, internalAxios }  from '../components/HTTPintercept';
+import { spotifyAxios }  from '../components/HTTPintercept';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 

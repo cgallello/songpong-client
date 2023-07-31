@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import PlaylistGallery from '../components/playlistgallery.jsx';
 
 export default function Home() {
+	const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
     const [playlists, setPlaylists] = useState(null);
 	const [inputValue, setInputValue] = useState('');
 	const [topWordSongs, setTopWordSongs] = useState({});
@@ -373,7 +374,8 @@ export default function Home() {
 				console.log(spotifyTracksResponse);
 				if (spotifyTracksResponse.status >= 200 && spotifyTracksResponse.status < 300) {
 					console.log(spotifyTracksResponse);
-					const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists', {
+					console.log(API_URL);
+					const internalResponse = await internalAxios.post(`${API_URL}/playlists`, {
 						'spotify_playlist_id': spotifyResponse.data.id,
 						'playlistName': spotifyResponse.data.name,
 						'owner': localStorage.getItem('spotifyId'),

@@ -4,7 +4,7 @@ import { spotifyAxios, internalAxios } from '../components/HTTPintercept';
 import { useLocation } from 'react-router-dom';
 
 function PlaylistGallery() {
-
+    const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
 	const [publicPlaylists, setPublicPlaylists] = useState([]);
 	const isFirstRender = useRef(true);
 	const location = useLocation();
@@ -19,13 +19,11 @@ function PlaylistGallery() {
 
     async function getTopPlaylists() {
         try {
-            const internalResponse = await internalAxios.get('http://localhost:8000/api/topplaylists', {
+            const internalResponse = await internalAxios.get(`${API_URL}/topplaylists`, {
                 params: {
                     spotify_id: localStorage.getItem('spotifyId')
                 }
             });
-            console.log(internalResponse.data);
-
             const playlists = internalResponse.data.map((playlist, index) => ({
                 key: index,
                 index: index,
@@ -35,8 +33,6 @@ function PlaylistGallery() {
                 upvoted: playlist.upvoted,
                 avatarUrl: playlist.spotify_avatar_url
             }));
-
-            console.log(playlists);
             setPublicPlaylists(playlists);
         } catch (error) { }
     }

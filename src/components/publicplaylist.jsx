@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import UpvoteButton from './upvotebutton.jsx';
 
 function PublicPlaylist({ index, playlistId, playlistName, upvotes, upvoted, avatarUrl }) {
-
+    const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
+    
     function truncatedPlaylistName(playlistName){
 		var trimmedString = playlistName.replace('– PlaylistGen.com','').substr(0, 100); 
 		if(playlistName.length > 100){
@@ -27,7 +27,7 @@ function PublicPlaylist({ index, playlistId, playlistName, upvotes, upvoted, ava
                 <img src={avatarUrl} alt="playlistCreatorImage" width="30" class="creatorImage" />
             </td>
             <td className="playlistName">
-                <Link to={"http://localhost:3000/playlist/" + playlistId}>{truncatedPlaylistName(playlistName)}</Link>
+                <Link to={`${API_URL}/playlist/` + playlistId}>{truncatedPlaylistName(playlistName)}</Link>
             </td>
 
 		</tr>

@@ -2,14 +2,12 @@ import { clientId } from '../config';
 import axios from 'axios';
 
 export const spotifyAxios = axios.create({
-	baseURL: 'localhost:3000',
 	timeout: 5000
 });
 spotifyAxios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
 spotifyAxios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const internalAxios = axios.create({
-	baseURL: 'localhost:3000',
 	timeout: 5000
 });
 internalAxios.defaults.headers.common['Content-Type'] = 'application/json';

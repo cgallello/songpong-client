@@ -9,7 +9,7 @@ import mixpanel from 'mixpanel-browser';
 import UpvoteButton from '../components/upvotebutton.jsx';
 
 export default function Playlist() {
-
+	const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
 	const isFirstRender = useRef(true)
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -49,8 +49,6 @@ export default function Playlist() {
 		let tmpResultsArray = [];
 		try {
 			const spotifyResponse = await spotifyAxios.get(endpointURL);
-			// const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId);
-			// // const parsedInternalResponse = JSON.parse(internalResponse);
 			document.title = spotifyResponse.data.name + ' – PlaylistGen.com';
 			localStorage.setItem("playlistId", spotifyResponse.data.id);
 			if (spotifyResponse.data.images[0] != null) {
@@ -80,7 +78,7 @@ export default function Playlist() {
 
 	async function getInternalPlaylistAPI() {
 		try {
-			const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId, {
+			const internalResponse = await internalAxios.get(`${API_URL}/playlists/` + playlistUrlId, {
 				params: {
                     spotify_id: localStorage.getItem('spotifyId')
                 }
@@ -124,7 +122,7 @@ export default function Playlist() {
 	};
 
 	function truncatedPlaylistName(playlistName){
-		var trimmedString = playlistName.substr(0, 40); 
+		var trimmedString = playlistName.replace('– PlaylistGen.com','').substr(0, 40); 
 		if(playlistName.length > 40){
 			return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
 		} else {
@@ -151,7 +149,7 @@ export default function Playlist() {
 								</button>
 								<div className="upvotePlaylistPage">
 									<UpvoteButton
-										playlistId={playlistId} 
+										playlistId={playlistData.id} 
 										upvotes={upvotes}
 										upvoted={upvoted}
 									/>
