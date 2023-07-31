@@ -15,6 +15,10 @@ function TrackList({ tracks, playlistId, currentSong, setCurrentSong }) {
 	return (
 		<table className="trackList">
 			<thead>
+				<th style={{width:"17px"}}></th>
+				<th style={{minWidth:"140px"}}></th>
+				<th style={{width:"55px"}}></th>
+				<th style={{width:"140px"}}></th>
 			</thead>
 			<tbody>
 				{track}

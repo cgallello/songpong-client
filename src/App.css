@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Kodchasan:wght@500;700&display=swap');
 
 
+/* Targets safari on iOS */
+@supports (-webkit-overflow-scrolling: touch) {
+	-webkit-font-smoothing: none;
+  }
+
 html{
 	background-image: linear-gradient(0deg, #BF2F3A 0%, #700EC2 100%);
 	background-repeat: no-repeat;
@@ -19,13 +24,134 @@ html, body, #root, main{
 	overflow:scroll;
 }
 
+main{
+	display: flex;
+}
+
 h1{
 	font-weight:700;
 	font-size:50px;
+	margin-top:0px;
+}
+
+.faded{
+	color:rgba(255, 255, 255, 0.5);
 }
 
 h2{
 	font-weight:500;
+	font-size:16px;
+}
+
+h2.genPageHeading{
+	font-size:30px;
+}
+
+h3{
+	margin-top:20px;
+}
+
+.generating p{
+	font-size:40px;
+	font-weight:500;
+	text-align: center;
+	overflow:hidden;
+	white-space:nowrap;
+	font-family:impact;
+}
+
+.generating{
+	background-color:rgb(213, 227, 23);
+	rotate:-10deg;
+	width:140vw;
+	color:black;
+	position:absolute;
+}
+
+h2.generatingHeader{
+	margin-top:-30px;
+	font-size:30px;
+	/* translate: 5px 5px; */
+	/* opacity:0.94; */
+	animation: opacityJump 7s infinite ease-in-out;
+	pointer-events: none;
+	opacity: 0.02;
+}
+
+h2.generatingHeaderTop{
+	margin-top:-30px;
+	font-size:30px;
+}
+
+@keyframes opacityJump {	
+	0%   { opacity: 0.02;  	}
+	80%  { opacity: 0.02; 	}
+	90%  { opacity: 0.2; 	}
+	100% { opacity: 0.02; 	}
+}
+
+.repeatingGenContainer{
+	display:inline-block;
+}
+
+.repeatingGenContainerContainer{
+	width:100%;
+	height:100%;
+	position:absolute;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+}
+
+
+p{
+	font-size:14px;
+	line-height:25px;
+	font-weight:500;
+}
+
+.instructions{
+	/* line spacing */
+	line-height:40px;
+}
+
+.instructions li::marker{
+	font-size:30px;
+	padding-right:10px;
+	vertical-align: middle;
+}
+
+.instructions li{
+  	padding-inline-start: 2ch;
+}
+
+.li_one{
+	list-style-type: '🤠';
+}
+
+.li_two{
+	list-style-type: '🎧';
+}
+
+.li_three{
+	list-style-type: '💌';
+}
+
+.li_four{
+	list-style-type: '😒';
+}
+
+.comPremium{
+	display:inline-block;
+}
+
+.premiumTag{
+	font-size:12px;
+	opacity:0.5;
+	vertical-align: top;
+	margin-top: 9px;
+    display: inline-block;
 }
 
 a{
@@ -52,12 +178,33 @@ button:hover{
 
 
 .mainWrapper{
-	margin:0 20px;
+	/* border: 1px solid rgba(255, 255, 255, 0.2); */
+	border-radius:30px;
+	padding:80px 100px;
+	box-shadow: 0px 0px 100px rgba(255, 255, 255, 0.1);
+	width:100%;
+	box-sizing:border-box;
+	max-width:800px;
+	margin: 30px auto;
+}
+
+.logout{
+	text-align: center;
+	width:100%;
+	opacity:0.6;
+	margin-bottom:100px;
+}
+
+.fadedWrapper{
+	padding:5px;
+	border-radius:30px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mainPadding{
-	margin:20px auto 0 auto;
+	margin:auto;
 	max-width:800px;
+	width:100%;
 }
 
 .searchBar{
@@ -68,20 +215,15 @@ button:hover{
 	align-items: center;
 	justify-content: space-between;
 	height:70px;
-	margin:20px 0;
+	margin:40px 0 20px;
+	max-width:1000px;
+	width:100%;
 }
 
-.searchBar svg{
-	display:inline;
-	transform: translateX(70px);
-	pointer-events: none;
-}
-
-input{
-	width:calc(100% - 200px);
-	font-size:16px;
-	padding:10px;
-	margin:0 20px;
+.searchBarInput{
+	width:calc(100% - 50px);
+	font-size:14px;
+	margin:0 10px 0 20px;
 	background-color: transparent;
 	outline:none;
 	border:none;
@@ -105,8 +247,10 @@ input:-webkit-autofill:active{
 }
 
 .search{
-	width:50px;
+	width:60px;
 	height:50px;
+	margin:0;
+	margin-right:10px;
 	background-color: transparent;
 	border: 2px solid white;
 	border-radius: 100px;
@@ -119,6 +263,84 @@ input:-webkit-autofill:active{
 	background-color: rgba(255, 255, 255, 0.1);
 }
 
+
+.tooLong{
+	display:none;
+}
+
+.publicCheckboxContainer{
+	text-align: left;
+	margin-left:25px;
+}
+
+.publicCheckboxContainer input{
+	margin-right:10px;
+}
+
+.publicCheckboxContainer label{
+	margin:0;
+}
+
+input[type="checkbox"] {
+	/* Add if not using autoprefixer */
+	-webkit-appearance: none;
+	appearance: none;
+	/* For iOS < 15 to remove gradient background */
+	background-color: transparent;
+	margin: 0 10px 0 0;
+	font: inherit;
+	color: currentColor;
+	width: 1.75em;
+	height: 1.75em;
+	border: 2px solid currentColor;
+	border-radius: 100%;
+	transform: translateY(-0.075em);
+	display: inline-grid;
+  	place-content: center;
+  }
+
+  input[type="checkbox"]::before {
+	content: "";
+	width: 0.65em;
+	height: 0.65em;
+	transform: scale(0);
+	transition: 100ms transform ease-out;
+	box-shadow: inset 1em 1em var(--form-control-color);
+	/* Windows High Contrast Mode */
+	background-color: white;
+	transform-origin: center;
+	clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+
+  input[type="checkbox"]:checked::before {
+	transform: scale(1);
+  }
+
+  .form-control + .form-control {
+	margin-top: 1em;
+  }
+
+  input[type="checkbox"]:focus {
+	outline: max(1px, 0.15em) solid rgba(255,255,255,0.5);
+	outline-offset: max(2px, 0.15em);
+  }
+
+  :root {
+	--form-control-disabled: #959495;
+  }
+  
+  input[type="checkbox"]:disabled {
+	--form-control-color: var(--form-control-disabled);
+  
+	color: var(--form-control-disabled);
+	cursor: not-allowed;
+  }
+
+  .form-control--disabled {
+	color: var(--form-control-disabled);
+	cursor: not-allowed;
+  }
+
 /* Homepage */
 
 .homepage{
@@ -127,6 +349,7 @@ input:-webkit-autofill:active{
 	align-items:center;
 	justify-content:center;
 	text-align: center;
+	margin:auto;
 }
 
 h1, h2{
@@ -135,35 +358,36 @@ h1, h2{
 
 /* animate .spotifyLogin button to bounce around as if it's being hit by two pong paddles */
 
-
+.hidden{
+	display:none;
+}
 
 
 .loginWrapper{
 	margin-top:50px;
 }
 
-@keyframes bounce {
-	0%   { translate: -30px -10px;  	}
-	20%  { translate: 30px 10px; 	}
-	40%  { translate: 0px -10px; 	}
-	60%  { translate: -30px 5px; 	}
-	80%  { translate: 30px 8px; 		}
-	100% { translate: -30px -10px; 		}
+@keyframes bounce {	
+	0%   { scale: 1;  	}
+	50%  { scale: 0.96; 	}
+	100% { scale: 1; 	}
 }
 
 .spotifyLogin{
-	animation: bounce 5s infinite linear;
+	animation: bounce 3s infinite ease-in-out;
 	display:inline-flex;
 	flex-direction:column;
 	align-items:center;
 	justify-content:center;
-	background-color:#1FD664;
+	background-color:#1DB954;
 	color:white;
 	width:250px;
 	height:50px;
 	border:0px;
 	border-radius:100px;
 	margin:0 30px;
+	font-weight:700;
+	font-size:16px;
 }
 
 .spotifyLogin:hover{
@@ -171,47 +395,43 @@ h1, h2{
 	background-color: #1ac059;
 }
 
-.paddle{
-	height:40px;
-	width:5px;
-	background-color: white;
-	border-radius:20px;
-	display:inline-block;
+.legal{
+	font-size:13px;
+	color:rgba(255,255,255,0.7);
+	margin-top:60px;
 }
 
-@keyframes paddleone{
-	0%   { translate: 0px 20px; }
-	20%  { translate: 0px -20px; }
-	40%  { translate: 0px 0px; }
-	60%  { translate: 0px 20px; }
-	80%  { translate: 0px -20px; }
-	100% { translate: 0px 20px; }
-}
-
-.paddle.one{
-	animation: paddleone 5s infinite linear;
-}
-
-@keyframes paddletwo{
-	0%   { translate: 0px -20px; }
-	20%  { translate: 0px 20px; }
-	40%  { translate: 0px 0px; }
-	60%  { translate: 0px -20px; }
-	80%  { translate: 0px 20px; }
-	100% { translate: 0px -20px; }
-}
-
-.paddle.two{
-	animation: paddletwo 5s infinite linear;
+.builtby{
+	font-size:13px;
+	color:rgba(255,255,255,0.7);
+	margin-top:0;
 }
 
 /* Playlist */
+
+.editWrapper{
+	margin:40px 0;
+}
 
 .editWrapper h1{
 	vertical-align: middle;
 	font-size:40px;
 	display:flex;
 	align-items: center;
+}
+
+.buttonRow{
+	display:flex;
+}
+
+.buttonRow button{
+	margin-right:10px;
+	height:45px;
+}
+
+.upvotePlaylistPage{
+	margin-left:auto;
+	margin-right:0;
 }
 
 .addContainer{
@@ -249,7 +469,6 @@ h1, h2{
 .albumArtwork{
 	width:120px;
 	height:120px;
-	border-radius:100%;
 	margin:0 30px 0 0;
 }
 
@@ -263,18 +482,40 @@ h1, h2{
 	text-align: left;
 	margin-top: 20px;
 	vertical-align: middle;
+	table-layout: fixed;
 }
 
 .trackRow.playable:hover{
 	cursor:pointer;
 }
 
-.trackName{
+.trackRow p{
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+}
+
+.trackTitleContainer .trackName{
 	font-size:16px;
+	margin-bottom:0;
 }
 
 .artistName{
-	color:rgba(255, 255, 255, 0.75);
+	color:rgba(255, 255, 255, 0.4);
+	padding-right:5px;
+	text-decoration: none;
+}
+
+.artistName:hover{
+	color:rgba(255, 255, 255, 0.7);
+}
+
+.albumName{
+	text-decoration:none;
+}
+
+.albumName:hover{
+	text-decoration: underline;
 }
 
 .avatarUrl{
@@ -288,6 +529,9 @@ h1, h2{
 	/* float:left; */
 	text-align: left;
 	display:flex;
+	overflow:hidden;
+	padding-right:10px;
+	width:100%;
 }
 
 .trackTitleContainer th{
@@ -303,11 +547,19 @@ h1, h2{
 	flex-direction: column;
 	text-align: left;
 	margin-left:15px;
+    flex-shrink: 0;
+}
+
+.trackInfo{
+	flex-grow:1;
 }
 
 .trackTitleContainer p{
 	margin:0 0 5px 5px;
 	align-self: flex-start;
+	text-wrap: nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
 }
 
 .albumArtworkContainer{
@@ -317,9 +569,14 @@ h1, h2{
 	position: relative;
 }
 
+.durationColumn{
+	padding-right:10px;
+	max-width:50px;
+}
+
 
 .trackArtwork.playing{
-	animation: rotating 2s infinite linear;
+	/* animation: rotating 2s infinite linear; */
 }
 
 @keyframes rotating {
@@ -333,14 +590,27 @@ h1, h2{
 	visibility: visible;
 }
 
+.trackRow.playable:hover .trackNumber{
+	display:none;
+}
+
+.trackNumberColumn{
+	position:relative;
+	max-width:10px;
+	width:10px;
+}
+
 .trackArtwork{
-	border-radius:100%;
 	width:40px;
 	height:40px;
 	position:absolute;
 	left:0; top:0; 
 	width:100%;
 	height:100%;
+}
+
+.playpauseIcon{
+	width:10px;
 }
 
 .playText{
@@ -354,14 +624,21 @@ h1, h2{
 	color:white;
 	visibility: hidden;
 	margin:0;
-	background-color: rgba(0,0,0,0.5);
-	border-radius: 100%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.spotifyLogo{
+	text-align:center;
+}
+
+.spotifyLogo img{
+	margin-top:40px;
+	width:100px;
 }
 
 
@@ -376,13 +653,14 @@ h1, h2{
 	padding:10px;
 	background-color: rgba(0,0,0,0.75);
 	max-height:50px;
+	/* width:100%; */
 	width:calc(100% - 20px);
 }
 
 .now-playing__cover{
 	width:40px;
 	height:40px;
-	border-radius:100%;
+	margin-left:10px;
 }
 
 .now-playing__track-info{
@@ -393,14 +671,26 @@ h1, h2{
 .now-playing__name{
 	font-size:16px;
 	margin-top:3px;
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	width:100%;
+	max-width:100%;
 }
 
 .now-playing__artist{
 	color:rgba(255, 255, 255, 0.65);
+	text-wrap:nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	width:100%;
+	max-width:100%;
 }
 
 .now-playing__controls{
-	
+	display:flex;
+	align-items: center;
+	flex-wrap:nowrap;
 }
 
 .hidden{
@@ -408,15 +698,173 @@ h1, h2{
 }
 
 .btn-spotify{
-	margin-right:10px;
 	width:40px;
 	display:inline-flex;
 	align-items: center;
 	text-align: center;
 	justify-content: center;
+	margin-right:10px;
+}
+
+.btn-spotify:last-child{
+	margin-right:0px;
 }
 
 .playpause{
 	width:92px;
 }
 
+
+/* Premium */
+
+.premiumWrapper{
+	width:100%;
+	height:100%;
+	display: flex;
+	position: absolute;
+	background-color: rgba(0,0,0,0.8);
+	margin:auto;
+	z-index: 1;
+}
+
+.premiumDialog{
+	/* width:500px;
+	height:300px; */
+	background-color: white;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin:auto;
+	color:black;
+	padding:30px 50px;
+}
+
+.premiumDialog h1{
+	font-size: 30px;
+	color:black;
+}
+
+.premiumDialog p{
+	font-size:16px;
+}
+
+.premiumDialog button{
+	border-color:black;
+	color:black;
+	font-size:16px;
+	display:inline;
+	margin:20px 10px;
+}
+
+.premiumDialog button:hover{
+	background-color:rgba(0,0,0,0.1);
+}
+
+.feedButtons{
+	width:100%;
+}
+
+/* PlaylistGallery */
+
+.playlistGallery{
+	margin:130px 0 20px 0;
+}
+
+.upvoteButton{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle;
+}
+
+.upvoted{
+	border-color:rgba(255, 255, 255, 0.5);
+}
+
+.upvoted:hover{
+	background-color: transparent;
+	cursor:initial;
+	/* background-color: rgba(255, 255, 255, 0.5); */
+}
+
+.upvoteIcon{
+	margin-right:5px;
+	margin-top:-2px;
+}
+
+.creatorImage{
+	border-radius: 100%;
+	margin:10px 10px;
+}
+
+.playlistName{
+	font-size: 16px;
+	margin-bottom:5px;
+}
+
+.playlistName a{
+	text-decoration: none;
+}
+
+.playlistName a:hover{
+	text-decoration: underline;
+}
+
+
+@media only screen and (max-width: 800px) {
+    .mainWrapper{
+		padding:10px 20px;
+	}
+
+	.homepage.mainWrapper{
+		margin:10px;
+		padding-top:40px;
+		padding-bottom:40px;
+	}
+	.mainPadding{
+		padding-left:20px;
+		padding-right:20px;
+		margin: auto;
+	}
+
+	.searchBar input{
+		font-size:13px;
+	}
+
+	.editWrapper h1 {
+		font-size:30px;
+	}
+
+	.trackRow td{
+		max-width: 240px;
+	}
+}
+
+@media only screen and (max-width: 415px) {
+	.now-playing__track-info{
+		max-width:130px;
+	}
+
+	.trackRow td{
+		max-width: 230px;
+	}
+
+
+	.generating p{
+		font-size:25px;
+	}
+
+	.albumColumn{
+		display:none;
+	}
+	.editWrapper h1{
+		font-size:25px;
+	}
+
+	.editWrapper h1 img{
+		width:80px;
+		height:80px;
+	}
+}

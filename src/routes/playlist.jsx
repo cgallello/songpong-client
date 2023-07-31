@@ -1,11 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import WebPlayback from '../components/webplayback';
 import TrackList from '../components/tracklist';
 import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
+import ShareButton from '../components/sharebutton';
+import mixpanel from 'mixpanel-browser';
+import UpvoteButton from '../components/upvotebutton.jsx';
 
 export default function Playlist() {
+	const API_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_API_URL_PROD : process.env.REACT_APP_API_URL_LOCAL;
+	const isFirstRender = useRef(true)
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			mixpanel.track_pageview();
+			return;
+		}
+	}, [])
 
 	const { playlistUrlId } = useParams();
 	const [playlistData, setPlaylistData] = useState(null);
@@ -14,29 +26,38 @@ export default function Playlist() {
 	const [playlistId, setPlaylistId] = useState('');
 	const [currentSong, setCurrentSongState] = useState(null);
 	const [currentAudio, setCurrentAudio] = useState(null);
+	const [copied, setCopied] = useState(false);
+    const [premium, setPremium] = useState(null);
+    const [upvotes, setUpvotes] = useState(0);
+    const [upvoted, setUpvoted] = useState(false);
 	const location = useLocation();
 
 	const urlParams = new URLSearchParams(window.location.search);
+
 	let code = urlParams.get('p');
 	useEffect(() => {
 		getPlaylistAPI();
+		getInternalPlaylistAPI();
 	}, [location.pathname]);
+
+	useEffect(() => {
+		setPremium(localStorage.getItem("spotifyProduct") === "premium");
+	}, []);
 
 	async function getPlaylistAPI() {
 		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistUrlId + playlistId + '?&timestamp=' + new Date().getTime();
 		let tmpResultsArray = [];
 		try {
 			const spotifyResponse = await spotifyAxios.get(endpointURL);
-			const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId);
-			// const parsedInternalResponse = JSON.parse(internalResponse);
-			document.title = spotifyResponse.data.name + ' – Song Pong';
+			document.title = spotifyResponse.data.name + ' – PlaylistGen.com';
 			localStorage.setItem("playlistId", spotifyResponse.data.id);
 			if (spotifyResponse.data.images[0] != null) {
 				setPlaylistData({
 					id: spotifyResponse.data.id,
 					image: spotifyResponse.data.images[0].url,
 					name: spotifyResponse.data.name,
-					uri: spotifyResponse.data.uri
+					uri: spotifyResponse.data.uri,
+					url: spotifyResponse.data.external_urls.spotify
 				});
 			} else {
 				setPlaylistData({
@@ -47,19 +68,23 @@ export default function Playlist() {
 				});
 			}
 
-			// add spotify_avatar_url to item.track. spotify_avatar_url is part of the stringified json in internalResponse.data.tracks
 			spotifyResponse.data.tracks.items.forEach((item, index) => {
-				if(internalResponse.data.tracks !== undefined) {
-					internalResponse.data.tracks.forEach((internalItem, internalIndex) => {
-						if(item.track.id === internalItem.spotify_track_id) {
-							item.track.spotify_avatar_url = internalItem.spotify_avatar_url;
-						}
-					});
-				}
 				tmpResultsArray.push(item.track);
 			});
 			setPlaylistTrackData(tmpResultsArray);
 			setPlaylistDataLoaded(true);
+		} catch (error) { }
+	}
+
+	async function getInternalPlaylistAPI() {
+		try {
+			const internalResponse = await internalAxios.get(`${API_URL}/playlists/` + playlistUrlId, {
+				params: {
+                    spotify_id: localStorage.getItem('spotifyId')
+                }
+			});
+			setUpvoted(internalResponse.data.upvoted);
+			setUpvotes(internalResponse.data.upvotes);
 		} catch (error) { }
 	}
 
@@ -73,20 +98,37 @@ export default function Playlist() {
 		} catch (error) { }
 	}
 
-	const setCurrentSong = (track) => {
+	const setCurrentSong = (track, action) => {
 		setCurrentSongState(track);
-		currentAudio && currentAudio.pause();
 		let spotifyProduct = localStorage.getItem('spotifyProduct');
-		if (spotifyProduct == "free") {
-			if (track.track.preview_url) {
-				let audio = new Audio(track.track.preview_url)
-				audio.play();
-				setCurrentAudio(audio);
+
+		if(action == "trackClick"){
+			mixpanel.track('Play Song', {"id" : track.id, "name" : track.name, "artist": track.artists[0].name });
+			if (spotifyProduct == "premium") {
+				setSongAPI(track);
 			}
-		} else if (spotifyProduct == "premium") {
-			setSongAPI(track);
+		} 
+
+		if(action == "trackClick" || action == "prev_next"){
+			currentAudio && currentAudio.pause();
+			if (spotifyProduct == "free") {
+				if (track.preview_url) {
+					let audio = new Audio(track.preview_url)
+					audio.play();
+					setCurrentAudio(audio);
+				}
+			}
 		}
 	};
+
+	function truncatedPlaylistName(playlistName){
+		var trimmedString = playlistName.replace('– PlaylistGen.com','').substr(0, 40); 
+		if(playlistName.length > 40){
+			return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "...";
+		} else {
+			return trimmedString;
+		}
+	}
 
 	return (
 		<main>
@@ -95,18 +137,30 @@ export default function Playlist() {
 					<BackButton />
 					{playlistDataLoaded &&
 						<div className="editWrapper">
-							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{playlistData.name}</h1>
-							<a href="/search">
-								<div className="addContainer">It's your turn! Add 3 songs
-									<div className="arrow">
-										<svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M7.42298 7.43117L1.66833 13.1858C1.35335 13.5008 0.814778 13.2777 0.814778 12.8323L0.814778 1.32297C0.814778 0.877518 1.35335 0.654434 1.66833 0.969416L7.42298 6.72407C7.61824 6.91933 7.61824 7.23591 7.42298 7.43117Z" stroke="white" strokeLinejoin="round"/>
-										</svg>
-									</div>
+							<h1>
+								<img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />
+								{truncatedPlaylistName(playlistData.name)}
+							</h1>
+							<div className="buttonRow">
+								{premium && <button className="button" onClick={() => setCurrentSong(playlistTrackData[0], "trackClick")}>Play all ▶</button>}
+								<ShareButton {...{ playlistData }} />
+								<button className="button" onClick={(() => {navigator.clipboard.writeText(playlistData.url); setCopied(true);})}>
+									{!copied ? "Copy Spotify Link" : "Copied!"}
+								</button>
+								<div className="upvotePlaylistPage">
+									<UpvoteButton
+										playlistId={playlistData.id} 
+										upvotes={upvotes}
+										upvoted={upvoted}
+									/>
 								</div>
-							</a>
+							</div>
+
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>
 								<TrackList tracks={playlistTrackData} playlistId={code} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+							</div>
+							<div className="spotifyLogo">
+								<img src="/Spotify_Logo_RGB_White.png" alt="Spotify Logo" />
 							</div>
 						</div>
 					}

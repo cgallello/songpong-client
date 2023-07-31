@@ -1,6 +1,22 @@
-import { clientId, redirectUri } from '../config';
+import { clientId, redirectUri } from '../config.js';
+import mixpanel from 'mixpanel-browser';
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
+
+	const isFirstRender = useRef(true)
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			if(localStorage.getItem('access_token')) {
+				window.location = '/home';
+			} else {
+				mixpanel.track_pageview();
+			}
+			return;
+		}
+	}, [])
 
 	function generateRandomString(length) {
 		let text = '';
@@ -28,11 +44,13 @@ export default function Login() {
 	}
 
 	function requestAuth() {
+		mixpanel.track('Spotify login click');
+
 		let codeVerifier = generateRandomString(128);
 
 		generateCodeChallenge(codeVerifier).then(codeChallenge => {
 			let state = generateRandomString(16);
-			let scope = 'user-read-private user-read-email playlist-modify-public streaming';
+			let scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private streaming';
 
 			localStorage.setItem('code_verifier', codeVerifier);
 
@@ -52,15 +70,17 @@ export default function Login() {
 
 	return (
 		<main>
-			<div className="homepage mainWrapper">
-				<h1 className="logo">Song Pong</h1>
-				<h2> Build playlists with friends for road trips, parties, and stuff</h2>
-				<div className="loginWrapper">
-					<div className="paddle one"></div>
-					<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
-					<div className="paddle two"></div>
+			{/* <div className="fadedWrapper"><div className="fadedWrapper"><div className="fadedWrapper"> */}
+				<div className="homepage mainWrapper">
+					<h1 className="logo">Playlist Gen <span className="faded">(dot com)</span></h1>
+					<h2>Paste in your dark confessions to share them as a playlist</h2>
+					<div className="loginWrapper">
+						<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
+					</div>
+					<p className="legal">By logging in, you agree to our <Link to="/privacy">privacy policy</Link>.</p>
+					<p className="builtby">Built by <a href="https://www.twitter.com/cgallello">@cgallello</a> and <a href="https://twitter.com/stedmanhalliday">@stedmanhalliday</a>.</p>
 				</div>
-			</div>
+			{/* </div></div></div> */}
 		</main>
 	);
 }

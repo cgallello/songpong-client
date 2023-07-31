@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { spotifyAxios, internalAxios }  from '../components/HTTPintercept';
+import { spotifyAxios }  from '../components/HTTPintercept';
 
 function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 
@@ -18,13 +18,7 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 			const spotifyResponse = await spotifyAxios.post(endpointURL,{
 				'uris': [track.uri]
 			});
-			if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
-				const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists/'+playlistId+'/tracks', {
-					'spotify_playlist_id': playlistId,
-					'curator': localStorage.getItem('spotifyId'),
-					'track_id': track.id
-				});
-			} else {
+			if (spotifyResponse.status < 200 || spotifyResponse.status >= 300) {
 				console.log('Error adding track to playlist');
 			}
 		} catch (error) {}
@@ -52,24 +46,38 @@ function Track({index, track, playlistId, currentSong, setCurrentSong}) {
 	}
 
 	return (
-		<tr className={"trackRow" + (track.preview_url ? " playable" : "")} onClick={() => setCurrentSong(track)}>
+		<tr className={"trackRow" + (track.preview_url ? " playable" : "")} onClick={() => setCurrentSong(track, "trackClick")}>
+			<td className="trackNumberColumn">
+				{isCurrentSong && <img src="/pause.svg" className="playpauseIcon" />}
+				{!isCurrentSong && 
+					<span><p className="trackNumber">{index + 1}</p>
+					<p className="playText"><img src="/play.svg" className="playpauseIcon" /></p></span>
+				}
+			</td>
 			<td className="trackTitleContainer">
-				<div className="albumArtworkContainer"><img src={track.album.images[2].url} className={isCurrentSong ? 'trackArtwork playing' : 'trackArtwork' } /><div className="playText">▶</div></div>
-				<div>
+				<div className="albumArtworkContainer"><img src={track.album.images[2].url} className={isCurrentSong ? 'trackArtwork playing' : 'trackArtwork' } /></div>
+				<div className="trackInfo">
 					<p className="trackName">{track.name}</p>
-					<p className="artistName">{track.artists[0].name}</p>
+					<p className="artistName">
+						{/* For each artist in track.artists, render the artist.name */}
+						{track.artists.map((artist, index) => (
+						<a key={index} className="artistName" href={artist.external_urls.spotify}>
+							{artist.name}
+						</a>
+						))}
+					</p>
 				</div>
 			</td>
-			<td><p>{msToHMS(track.duration_ms)}</p></td>
-			<td><p>{track.album.name}</p></td>
-			<td>
+			<td className="durationColumn"><p>{msToHMS(track.duration_ms)}</p></td>
+			<td className="albumColumn"><a href={track.album.external_urls.spotify} className="albumName">{track.album.name}</a></td>
+			{/* <td>
 				{track.spotify_avatar_url &&
 				<img src={track.spotify_avatar_url} className={"avatarUrl"} />
 				}
-			</td>
-			{playlistId !== null ? (<td>
+			</td> */}
+			{/* {playlistId !== null ? (<td>
 				<button onClick={addToPlaylist} disabled={added}>{!added ? 'Add' : 'Added'}</button>
-			</td>):(null)}
+			</td>):(null)} */}
 		</tr>
 	);
 }
