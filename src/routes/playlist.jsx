@@ -6,6 +6,7 @@ import { internalAxios, spotifyAxios } from '../components/HTTPintercept';
 import BackButton from '../components/backbutton';
 import ShareButton from '../components/sharebutton';
 import mixpanel from 'mixpanel-browser';
+import UpvoteButton from '../components/upvotebutton.jsx';
 
 export default function Playlist() {
 
@@ -27,6 +28,8 @@ export default function Playlist() {
 	const [currentAudio, setCurrentAudio] = useState(null);
 	const [copied, setCopied] = useState(false);
     const [premium, setPremium] = useState(null);
+    const [upvotes, setUpvotes] = useState(0);
+    const [upvoted, setUpvoted] = useState(false);
 	const location = useLocation();
 
 	const urlParams = new URLSearchParams(window.location.search);
@@ -34,6 +37,7 @@ export default function Playlist() {
 	let code = urlParams.get('p');
 	useEffect(() => {
 		getPlaylistAPI();
+		getInternalPlaylistAPI();
 	}, [location.pathname]);
 
 	useEffect(() => {
@@ -66,19 +70,23 @@ export default function Playlist() {
 				});
 			}
 
-			// add spotify_avatar_url to item.track. spotify_avatar_url is part of the stringified json in internalResponse.data.tracks
 			spotifyResponse.data.tracks.items.forEach((item, index) => {
-				// if(internalResponse.data.tracks !== undefined) {
-				// 	internalResponse.data.tracks.forEach((internalItem, internalIndex) => {
-				// 		if(item.track.id === internalItem.spotify_track_id) {
-				// 			item.track.spotify_avatar_url = internalItem.spotify_avatar_url;
-				// 		}
-				// 	});
-				// }
 				tmpResultsArray.push(item.track);
 			});
 			setPlaylistTrackData(tmpResultsArray);
 			setPlaylistDataLoaded(true);
+		} catch (error) { }
+	}
+
+	async function getInternalPlaylistAPI() {
+		try {
+			const internalResponse = await internalAxios.get('http://localhost:8000/api/playlists/' + playlistUrlId, {
+				params: {
+                    spotify_id: localStorage.getItem('spotifyId')
+                }
+			});
+			setUpvoted(internalResponse.data.upvoted);
+			setUpvotes(internalResponse.data.upvotes);
 		} catch (error) { }
 	}
 
@@ -131,13 +139,23 @@ export default function Playlist() {
 					<BackButton />
 					{playlistDataLoaded &&
 						<div className="editWrapper">
-							<h1><img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />{truncatedPlaylistName(playlistData.name)}</h1>
+							<h1>
+								<img src={playlistData.image ? playlistData.image : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='} alt={playlistData.name} className={playlistData.image ? "albumArtwork" : "albumArtwork empty"} />
+								{truncatedPlaylistName(playlistData.name)}
+							</h1>
 							<div className="buttonRow">
 								{premium && <button className="button" onClick={() => setCurrentSong(playlistTrackData[0], "trackClick")}>Play all ▶</button>}
 								<ShareButton {...{ playlistData }} />
 								<button className="button" onClick={(() => {navigator.clipboard.writeText(playlistData.url); setCopied(true);})}>
 									{!copied ? "Copy Spotify Link" : "Copied!"}
 								</button>
+								<div className="upvotePlaylistPage">
+									<UpvoteButton
+										playlistId={playlistId} 
+										upvotes={upvotes}
+										upvoted={upvoted}
+									/>
+								</div>
 							</div>
 
 							<div style={{ overflowY: 'scroll', height: 'calc(100% - 40px)' }}>

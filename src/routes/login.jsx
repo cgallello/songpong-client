@@ -1,7 +1,7 @@
 import { clientId, redirectUri } from '../config.js';
 import mixpanel from 'mixpanel-browser';
 import React, { useEffect, useRef } from 'react';
-
+import { Link } from 'react-router-dom';
 
 export default function Login() {
 
@@ -50,7 +50,7 @@ export default function Login() {
 
 		generateCodeChallenge(codeVerifier).then(codeChallenge => {
 			let state = generateRandomString(16);
-			let scope = 'user-read-private user-read-email playlist-modify-public streaming';
+			let scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private streaming';
 
 			localStorage.setItem('code_verifier', codeVerifier);
 
@@ -77,7 +77,7 @@ export default function Login() {
 					<div className="loginWrapper">
 						<button onClick={requestAuth} className="spotifyLogin">Login with Spotify</button>
 					</div>
-					<p className="legal">By logging in, you agree to our <a href="/privacy">privacy policy</a>.</p>
+					<p className="legal">By logging in, you agree to our <Link to="/privacy">privacy policy</Link>.</p>
 					<p className="builtby">Built by <a href="https://www.twitter.com/cgallello">@cgallello</a> and <a href="https://twitter.com/stedmanhalliday">@stedmanhalliday</a>.</p>
 				</div>
 			{/* </div></div></div> */}

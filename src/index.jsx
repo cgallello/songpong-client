@@ -23,6 +23,9 @@ if (window.location.hostname.toLowerCase().search(productionHost) > 0) {
 }
 mixpanel.init(token, { debug: debug, track_pageview: true, persistence: 'localStorage' });
 
+if (process.env.NODE_ENV !== "development")
+    console.log = () => {};
+
 const router = createBrowserRouter([
 	{
 		path: "/",

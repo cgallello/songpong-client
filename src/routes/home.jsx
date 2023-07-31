@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { spotifyAxios, internalAxios } from '../components/HTTPintercept';
 import mixpanel from 'mixpanel-browser';
 import { Link } from 'react-router-dom';
+import PlaylistGallery from '../components/playlistgallery.jsx';
 
 export default function Home() {
     const [playlists, setPlaylists] = useState(null);
@@ -13,8 +14,9 @@ export default function Home() {
 	const [premium, setPremium] = useState(false);
 	const [premiumFail, setPremiumFail] = useState(false);
 	const [premiumSuccess, setPremiumSuccess] = useState(false);
+	const [publicPlaylist, setPublicPlaylist] = useState(true);
 
-	const isFirstRender = useRef(true)
+	const isFirstRender = useRef(true);
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -99,9 +101,9 @@ export default function Home() {
 				}
 				console.log("=== Final tracks ===");
 				console.log(playlistTracks);
-				let playlistId = await createPlaylistAPI(inputValue);
-				let playlist = await addToPlaylistAPI(playlistTracks, playlistId);
-				window.location.href = '/playlist/' + playlistId;
+				let playlistId = await createPlaylistAPI(inputValue, playlistTracks, publicPlaylist);
+				// let playlist = await addToPlaylistAPI(playlistTracks, playlistId);
+				// window.location.href = '/playlist/' + playlistId;
 			}
 		}
 		else{
@@ -345,50 +347,56 @@ export default function Home() {
 		return null;
 	}
 
-	async function createPlaylistAPI(name) {
+	async function createPlaylistAPI(name, tracks, isPublic = false) {
 		const endpointURL = 'https://api.spotify.com/v1/users/' + localStorage.getItem('spotifyId') + '/playlists';
 		try {
+			console.log(isPublic);
 			const spotifyResponse = await spotifyAxios.post(endpointURL, {
-				'name': name.substring(0, 199),
-				'public': true
+				'name': name.substring(0, 179) + " – PlaylistGen.com",
+				'public': isPublic
 			});
 			if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
 				localStorage.setItem('spotifyPlaylistId', spotifyResponse.data.id);
 				localStorage.setItem("playlistId", spotifyResponse.data.id);
-				// const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists', {
-				// 	'spotify_playlist_id': spotifyResponse.data.id,
-				// 	'owner': localStorage.getItem('spotifyId'),
-				// 	'members': [],
-				// 	'tracks': []
-				// });
+				
+				const endpointURL = 'https://api.spotify.com/v1/playlists/' + spotifyResponse.data.id + '/tracks';
+				console.log(endpointURL);
+				let trackUris = [];
+				console.log(tracks);
+				for (let i = 0; i < tracks.length; i++) {
+					trackUris[i] = tracks[i].uri;
+				}
+				console.log(trackUris);
+				const spotifyTracksResponse = await spotifyAxios.post(endpointURL,{
+					'uris': trackUris
+				});
+				console.log(spotifyTracksResponse);
+				if (spotifyTracksResponse.status >= 200 && spotifyTracksResponse.status < 300) {
+					console.log(spotifyTracksResponse);
+					const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists', {
+						'spotify_playlist_id': spotifyResponse.data.id,
+						'playlistName': spotifyResponse.data.name,
+						'owner': localStorage.getItem('spotifyId'),
+						'isPublic': isPublic
+					});
+					if (internalResponse.status >= 200 && internalResponse.status < 300) {
+						window.location.href = '/playlist/' + spotifyResponse.data.id;
+						return spotifyResponse.data.id;
+					} else {
+						console.log('INTERNAL: Error creating playlist');
+						window.location.reload();
+					}
+				} else {
+					console.log('SPOTIFY: Error adding tracks to playlist');
+					window.location.reload();
+				}
+
 				return spotifyResponse.data.id;
-				// window.location.href = '/playlist/' + spotifyResponse.data.id;
+				
 			} else {
 				console.log('Error creating playlist');
 			}
 		} catch (error) { }
-	}
-
-	async function addToPlaylistAPI(tracks, playlistId) {
-		const endpointURL = 'https://api.spotify.com/v1/playlists/' + playlistId + '/tracks';
-		let trackUris = [];
-		for (let i = 0; i < tracks.length; i++) {
-			trackUris[i] = tracks[i].uri;
-		}
-		try {
-			const spotifyResponse = await spotifyAxios.post(endpointURL,{
-				'uris': trackUris
-			});
-			// if (spotifyResponse.status >= 200 && spotifyResponse.status < 300) {
-			// 	const internalResponse = await internalAxios.post('http://localhost:8000/api/playlists/'+playlistId+'/tracks', {
-			// 		'spotify_playlist_id': playlistId,
-			// 		'curator': localStorage.getItem('spotifyId'),
-			// 		'track_id': track.id
-			// 	});
-			// } else {
-			// 	console.log('Error adding track to playlist');
-			// }
-		} catch (error) {}
 	}
 
 	async function searchAPI(trackName, offset, artist) {
@@ -414,6 +422,10 @@ export default function Home() {
 	function Logout(){
 		localStorage.clear();
 		window.location = '/';
+	}
+
+	function togglePublicPlaylist(){
+		setPublicPlaylist(!publicPlaylist);
 	}
 
 	return (
@@ -457,13 +469,13 @@ export default function Home() {
 					<div className={generating ? "editor hidden" : "editor"}>
 						<h1 className="logo">Playlist Gen <span className="comPremium"><span className="faded">(.com)</span><span className="premiumTag">{ premium && "PREMIUM" }</span></span></h1>
 						<ul className="instructions">
-							<li className="li_one">Type your deepest darkest thoughts.</li>
+							<li className="li_one">Type your best pickup line (or darkest thoughts, you do you).</li>
 							<li className="li_two">I'll create a Spotify playlist with songs that match what you type.</li>
 							<li className="li_three">Copy the playlist link and send it to your crush.</li>
-							<li className="li_four">It's not perfect ok?</li>
 						</ul>
 						<form onSubmit={submitSearch} className="searchBar">
 							<input
+								className="searchBarInput"
 								type="text"
 								placeholder="be unhinged"
 								autoFocus
@@ -475,9 +487,14 @@ export default function Home() {
 							<input type="submit" className="search" value="Go"></input>
 						</form>
 						<p className={!tooLong ? "hidden" : undefined}>Fewer than 200 characters pls</p>
+						<div className="publicCheckboxContainer">
+							<input type="checkbox" className="publicCheckbox" id="publicCheckbox" onChange={togglePublicPlaylist} checked={publicPlaylist}></input>
+							<label htmlFor="publicCheckbox" className="publicCheckboxLabel">Public playlist <span style={{"opacity": "0.6"}}>(shareable + can show in top playlists)</span></label>
+						</div>
 						{/* <button onClick={createPlaylistAPI}>Create playlist</button>
 						<button onClick={queryMusicBrains}>Query music brainz</button>
 						<button onClick={getURIs}>Query Spotify for URIs</button> */}
+						<PlaylistGallery />
 					</div>
 				</div>
 				{!showPremium && <div className="logout"><Link href="/" onClick={Logout}>Logout</Link></div>}

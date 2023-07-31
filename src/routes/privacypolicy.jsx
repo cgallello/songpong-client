@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BackButton from '../components/backbutton';
 import mixpanel from 'mixpanel-browser';
+import { Link } from 'react-router-dom';
 
 export default function Privacy() {
 
@@ -17,7 +18,7 @@ export default function Privacy() {
 		<main>
 			<div className="mainPadding">
 				<div className="mainWrapper">
-					<a href="/"><BackButton /></a>
+					<Link to="/"><BackButton /></Link>
 					<h2>Privacy Policy for PlaylistGen.com</h2>
 					<p>Effective Date: July 23, 2023</p>
 					<p>In this Privacy Policy (“Policy”), we describe how PlaylistGen.com (“PlaylistGen,” “we,” or “us”) collects, uses, and discloses information that we obtain about visitors to our website https://www.playlistgen.com (the “Site”) and the services available through our Site (collectively, the “Services”).</p>

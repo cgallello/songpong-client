@@ -56,8 +56,9 @@ export default function Auth() {
 
         localStorage.setItem("spotifyId", spotifyId);
         localStorage.setItem("spotifyProduct", data.product);
+        const user = await postUser(data);
 
-        window.location = "/home";
+        // window.location = "/home";
     }
 
     async function postUser(data) {

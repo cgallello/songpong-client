@@ -192,6 +192,7 @@ button:hover{
 	text-align: center;
 	width:100%;
 	opacity:0.6;
+	margin-bottom:100px;
 }
 
 .fadedWrapper{
@@ -219,7 +220,7 @@ button:hover{
 	width:100%;
 }
 
-input{
+.searchBarInput{
 	width:calc(100% - 50px);
 	font-size:14px;
 	margin:0 10px 0 20px;
@@ -266,6 +267,79 @@ input:-webkit-autofill:active{
 .tooLong{
 	display:none;
 }
+
+.publicCheckboxContainer{
+	text-align: left;
+	margin-left:25px;
+}
+
+.publicCheckboxContainer input{
+	margin-right:10px;
+}
+
+.publicCheckboxContainer label{
+	margin:0;
+}
+
+input[type="checkbox"] {
+	/* Add if not using autoprefixer */
+	-webkit-appearance: none;
+	appearance: none;
+	/* For iOS < 15 to remove gradient background */
+	background-color: transparent;
+	margin: 0 10px 0 0;
+	font: inherit;
+	color: currentColor;
+	width: 1.75em;
+	height: 1.75em;
+	border: 2px solid currentColor;
+	border-radius: 100%;
+	transform: translateY(-0.075em);
+	display: inline-grid;
+  	place-content: center;
+  }
+
+  input[type="checkbox"]::before {
+	content: "";
+	width: 0.65em;
+	height: 0.65em;
+	transform: scale(0);
+	transition: 100ms transform ease-out;
+	box-shadow: inset 1em 1em var(--form-control-color);
+	/* Windows High Contrast Mode */
+	background-color: white;
+	transform-origin: center;
+	clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+
+  input[type="checkbox"]:checked::before {
+	transform: scale(1);
+  }
+
+  .form-control + .form-control {
+	margin-top: 1em;
+  }
+
+  input[type="checkbox"]:focus {
+	outline: max(1px, 0.15em) solid rgba(255,255,255,0.5);
+	outline-offset: max(2px, 0.15em);
+  }
+
+  :root {
+	--form-control-disabled: #959495;
+  }
+  
+  input[type="checkbox"]:disabled {
+	--form-control-color: var(--form-control-disabled);
+  
+	color: var(--form-control-disabled);
+	cursor: not-allowed;
+  }
+
+  .form-control--disabled {
+	color: var(--form-control-disabled);
+	cursor: not-allowed;
+  }
 
 /* Homepage */
 
@@ -346,8 +420,18 @@ h1, h2{
 	align-items: center;
 }
 
+.buttonRow{
+	display:flex;
+}
+
 .buttonRow button{
 	margin-right:10px;
+	height:45px;
+}
+
+.upvotePlaylistPage{
+	margin-left:auto;
+	margin-right:0;
 }
 
 .addContainer{
@@ -640,6 +724,7 @@ h1, h2{
 	position: absolute;
 	background-color: rgba(0,0,0,0.8);
 	margin:auto;
+	z-index: 1;
 }
 
 .premiumDialog{
@@ -681,6 +766,51 @@ h1, h2{
 	width:100%;
 }
 
+/* PlaylistGallery */
+
+.playlistGallery{
+	margin:130px 0 20px 0;
+}
+
+.upvoteButton{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle;
+}
+
+.upvoted{
+	border-color:rgba(255, 255, 255, 0.5);
+}
+
+.upvoted:hover{
+	background-color: transparent;
+	cursor:initial;
+	/* background-color: rgba(255, 255, 255, 0.5); */
+}
+
+.upvoteIcon{
+	margin-right:5px;
+	margin-top:-2px;
+}
+
+.creatorImage{
+	border-radius: 100%;
+	margin:10px 10px;
+}
+
+.playlistName{
+	font-size: 16px;
+	margin-bottom:5px;
+}
+
+.playlistName a{
+	text-decoration: none;
+}
+
+.playlistName a:hover{
+	text-decoration: underline;
+}
 
 
 @media only screen and (max-width: 800px) {
